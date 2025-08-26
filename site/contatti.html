@@ -1,31 +1,23 @@
-<!doctype html>
-<html lang="it">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Chi siamo</title>
-<link rel="icon" href="./assets/favicon.ico">
-<link rel="stylesheet" href="./assets/styles.css">
-</head>
-<body>
-<header style="padding:12px"><a href="./" aria-label="Torna alla Home">&larr; Torna alla Home</a></header>
-<main class="container" style="max-width:min(1100px,95%);margin:20px auto">
-  <h1 style="margin:0 0 16px 0">Chi siamo</h1>
-  <section class="page-content">
-<div class="dialog"><button class="close" data-close="">×</button>
-<h3>Chi siamo</h3>
-<p><b>Offerteshock</b> nasce da un’idea semplice: aiutarti a comprare meglio, non di più. Siamo un piccolo team indipendente (questa è una demo) che ogni giorno seleziona offerte reali, prova prodotti quando possibile e spiega con parole normali cosa conviene e cosa no. Niente fumo, niente clickbait: solo consigli che daremmo a un amico.</p>
-<h4>Il nostro metodo</h4>
-<ul>
-<li><b>Valore reale</b>: guardiamo lo <i>storico prezzo</i> e scartiamo i “finti sconti”.</li>
-<li><b>Utilità</b>: preferiamo prodotti che risolvono problemi, non solo “belle foto”.</li>
-<li><b>Trasparenza</b>: se usiamo link di affiliazione, il prezzo per te non cambia mai.</li>
-</ul>
-<h4>Perché fidarti</h4>
-<p>Scriviamo come compratori prima che come “siti di offerte”. Quando sbagliamo, lo diciamo. Quando un prodotto ha <b>pro</b> e <b>contro</b>, li mettiamo in chiaro. E se trovi un affare migliore, segnalalo: aggiornare e migliorare è parte del gioco.</p>
-<p><i>Vuoi parlare con noi?</i> Apri la sezione <a data-open="contact" href="#">Contatti</a> e scrivici.</p>
+<!doctype html><html lang="it"><head>
+<meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<meta name="theme-color" content="#0b0e13"/><title>Contatti · OfferteShock</title>
+<link rel="stylesheet" href="./assets/styles.css"/></head><body>
+<div class="wrap">
+  <div class="card">
+    <h1>Contattaci</h1>
+    <p>Per richieste o esercizio dei diritti privacy, scrivici.</p>
+    <form action="mailto:info@tuodominio.it" method="post" enctype="text/plain" onsubmit="alert('Si aprirà il tuo client email per inviare la richiesta.');">
+      <div style="display:grid;gap:12px;max-width:520px">
+        <input required placeholder="Il tuo nome" name="nome" style="padding:12px;border-radius:10px;border:1px solid rgba(255,255,255,.15);background:#0f1320;color:#e7edf3">
+        <input required type="email" placeholder="La tua email" name="email" style="padding:12px;border-radius:10px;border:1px solid rgba(255,255,255,.15);background:#0f1320;color:#e7edf3">
+        <textarea required rows="5" placeholder="Messaggio" name="messaggio" style="padding:12px;border-radius:10px;border:1px solid rgba(255,255,255,.15);background:#0f1320;color:#e7edf3"></textarea>
+        <button class="btn" type="submit">Invia</button>
+      </div>
+    </form>
+    <p style="color:#aab4c3;margin-top:12px">Sostituisci <code>info@tuodominio.it</code> con la tua email o integra un servizio form esterno.</p>
+    <p><a class="btn" href="./index.html">Torna alla home</a></p>
+  </div>
+  <footer>© <span id="y"></span> OfferteShock · <a href="./privacy.html">Privacy</a> · <a href="./termini.html">Termini</a></footer>
 </div>
-  </section>
-</main>
-</body>
-</html>
+<script>document.getElementById('y').textContent=new Date().getFullYear()</script>
+</body></html>

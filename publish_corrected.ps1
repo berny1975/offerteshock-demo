@@ -27,11 +27,6 @@ $remoteUrl = "https://github.com/$owner/$RepoName.git"
 Info ("Utente GitHub: " + $owner)
 Info ("Repo: " + $remoteUrl)
 
-# Checks
-$wf = Join-Path $here ".github\workflows\pages.yml"
-if (-not (Test-Path $wf)) { Die "Manca .github\workflows\pages.yml nel pacchetto." }
-if (-not (Test-Path (Join-Path $here "site\index.html"))) { Die "Manca site\index.html nel pacchetto." }
-
 # Ensure git identity
 $cfgEmail = (& git config user.email)
 if (-not $cfgEmail) { & git config user.email "$owner@users.noreply.github.com" }
@@ -41,12 +36,12 @@ if (-not $cfgName) { & git config user.name $owner }
 # Init repo here
 if (-not (Test-Path (Join-Path $here ".git"))) { & git init | Out-Null }
 
-# 1) Save our bundle on a temp branch
+# 1) Snapshot current bundle on temp branch
 & git checkout -B bundle_local | Out-Null
 & git add -A
-& git commit -m "snapshot: corrected bundle" --allow-empty | Out-Null
+& git commit -m "snapshot: corrected bundle (full v7)" --allow-empty | Out-Null
 
-# 2) Ensure remote exists / is created
+# 2) Ensure remote repo exists
 $exists = $true
 try { & gh repo view "$owner/$RepoName" 2>$null | Out-Null } catch { $exists = $false }
 if (-not $exists) {
@@ -54,27 +49,30 @@ if (-not $exists) {
   if ($LASTEXITCODE -ne 0) { Die "Creazione repo fallita (permessi/connessione)" }
 }
 
-# 3) Reset local main to remote main (fast-forward base)
+# 3) Fetch and detect origin/main by output
+& git remote remove origin 2>$null | Out-Null
+& git remote add origin $remoteUrl 2>$null | Out-Null
 & git fetch origin --prune 2>$null | Out-Null
-$hasRemoteMain = $true
-try { & git ls-remote --heads origin main 2>$null | Out-Null } catch { $hasRemoteMain = $false }
+$ls = (& git ls-remote --heads origin main)
+$hasRemoteMain = -not [string]::IsNullOrWhiteSpace($ls)
 
 if ($hasRemoteMain) {
-  & git checkout -B main origin/main | Out-Null
+  Info "Rilevato origin/main. Allineo main al remoto..."
+  & git checkout -B main | Out-Null
+  & git reset --hard origin/main | Out-Null
 } else {
+  Info "origin/main non esiste (repo vuoto). Creo main locale..."
   & git checkout -B main | Out-Null
 }
 
-# 4) Bring our bundle on top of remote main
+# 4) Overlay bundle on top of main
 & git checkout bundle_local -- .
 & git add -A
-& git commit -m "publish: overwrite with corrected bundle (rebased on remote main)" --allow-empty | Out-Null
+& git commit -m "publish: overwrite with corrected bundle (rebase-safe v7)" --allow-empty | Out-Null
 
-# 5) Set origin and push
-& git remote remove origin 2>$null | Out-Null
-& git remote add origin $remoteUrl 2>$null | Out-Null
+# 5) Push
 & git push -u origin main
-if ($LASTEXITCODE -ne 0) { Die "git push non riuscito. Controlla credenziali o permessi." }
+if ($LASTEXITCODE -ne 0) { Die "git push non riuscito. Controlla permessi." }
 
 # 6) Tag
 $tag = "v" + (Get-Date -Format "yyyy.MM.dd-HHmm")

@@ -20,5 +20,48 @@
   <footer>Â© <span id="y"></span> OfferteShock Â· <a href="./privacy.html">Privacy</a> Â· <a href="./termini.html">Termini</a></footer>
 </div>
 <script>document.getElementById('y').textContent=new Date().getFullYear()</script>
-<script src="./assets/nav-clean.js" defer></script>
+<script>/* SAFE NAV PRUNE */
+(function(){
+  var NAV_ROOT_SELECTOR = ".burger, .mobile-menu, #burger, [data-burger], .drawer, .drawer-menu";
+  var KILL_TEXT = ["privacy","termini","terms","condizioni","contatti"];
+  function norm(s){ return (s||"").toString().trim().toLowerCase().replace(/\s+/g," "); }
+  function pruneBurger(){
+    var roots = document.querySelectorAll(NAV_ROOT_SELECTOR);
+    roots.forEach(function(root){
+      root.querySelectorAll("a,button").forEach(function(el){
+        var label = norm(el.getAttribute("aria-label") || el.textContent);
+        if (!label) return;
+        if (KILL_TEXT.some(function(k){ return label.indexOf(k) === 0 || label === k; })){
+          var victim = el.closest("li") || el;
+          if (victim && victim.parentNode) victim.parentNode.removeChild(victim);
+        }
+      });
+    });
+  }
+  function pruneModals(){
+    var MODAL_SEL = ".modal,[role='dialog'],.modal-dialog,.mdc-dialog,.uk-modal,.drawer[role='dialog']";
+    document.querySelectorAll(MODAL_SEL).forEach(function(mod){
+      var head = mod.querySelector("[aria-label], h1, h2, h3, h4");
+      var text = "";
+      if (head) text = head.getAttribute("aria-label") || head.textContent || "";
+      else text = (mod.textContent || "").slice(0,200);
+      text = norm(text);
+      if (KILL_TEXT.some(function(k){ return text.indexOf(k) !== -1; })){
+        if (mod.parentNode) mod.parentNode.removeChild(mod);
+      }
+    });
+    document.querySelectorAll("a,button").forEach(function(t){
+      var tgt = ((t.getAttribute("href")||"") + " " + (t.getAttribute("data-target")||"") + " " + (t.getAttribute("data-bs-target")||"")).toLowerCase();
+      if (!tgt) return;
+      if (/(privacy|termini|terms|condizioni|contatt)/.test(tgt)){
+        var victim = t.closest("li") || t;
+        if (victim && victim.parentNode) victim.parentNode.removeChild(victim);
+      }
+    });
+  }
+  function run(){ pruneBurger(); pruneModals(); }
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", run); else run();
+})();
+</script>
 </body></html>
+

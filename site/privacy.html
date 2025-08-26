@@ -1,87 +1,31 @@
-﻿<!doctype html><html lang="it"><head>
+<!doctype html>
+<html lang="it">
+<head>
 <meta charset="utf-8">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<meta name="viewport" content="width=device-width,initial-scale=1"/>
-<meta name="theme-color" content="#0b0e13"/><title>Privacy Â· OfferteShock</title>
-<link rel="stylesheet" href="./assets/styles.css"/></head><body>
-<div class="wrap">
-  <div class="card">
-    <h1>Informativa Privacy</h1>
-    <p>Questa pagina descrive come trattiamo i dati personali ai sensi del Reg. UE 2016/679 (GDPR).</p>
-    <h2>1. Titolare del trattamento</h2>
-    <p><strong>OfferteShock</strong> â€“ contatti: <a href="./contatti.html">pagina contatti</a>.</p>
-    <h2>2. Dati trattati</h2>
-    <ul>
-      <li>Dati di navigazione (log tecnici, IP anonimizzato ove possibile).</li>
-      <li>Dati volontariamente forniti (email per registrazione/avvisi).</li>
-      <li>Preferiti/Watchlist ai fini di invio alert (opt-in).</li>
-      <li>Cookie tecnici; eventuali cookie analitici/marketing solo previo consenso.</li>
-    </ul>
-    <h2>3. FinalitÃ  e basi giuridiche</h2>
-    <ul>
-      <li>Erogazione del servizio (watchlist/alert): <em>contratto</em>.</li>
-      <li>Comunicazioni operative: <em>interesse legittimo</em>.</li>
-      <li>Newsletter/marketing: <em>consenso</em>.</li>
-    </ul>
-    <h2>4. Conservazione</h2>
-    <p>Conserviamo i dati per il tempo necessario al servizio o fino a revoca dellâ€™account.</p>
-    <h2>5. Diritti degli interessati</h2>
-    <p>Puoi esercitare i diritti di accesso, rettifica, cancellazione, limitazione e opposizione tramite la <a href="./contatti.html">pagina contatti</a>.</p>
-    <h2>6. Trasferimenti</h2>
-    <p>Eventuali trasferimenti extra-UE avvengono con adeguate garanzie (es. clausole standard).</p>
-    <h2>7. Note affiliazione</h2>
-    <p>Il sito partecipa a programmi di affiliazione. I prezzi/disponibilitÃ  mostrati possono non essere aggiornati in tempo reale: verifica sempre sulla pagina del merchant.</p>
-    <p><a class="btn" href="./index.html">Torna alla home</a></p>
-  </div>
-  <footer>Â© <span id="y"></span> OfferteShock Â· <a href="./termini.html">Termini</a> Â· <a href="./contatti.html">Contatti</a></footer>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Contatti</title>
+<link rel="icon" href="./assets/favicon.ico">
+<link rel="stylesheet" href="./assets/styles.css">
+</head>
+<body>
+<header style="padding:12px"><a href="./" aria-label="Torna alla Home">&larr; Torna alla Home</a></header>
+<main class="container" style="max-width:min(1100px,95%);margin:20px auto">
+  <h1 style="margin:0 0 16px 0">Contatti</h1>
+  <section class="page-content">
+<div class="dialog"><button class="close" data-close="">×</button>
+<h3>Contatti</h3>
+<p>Scrivici per segnalazioni, collaborazioni o domande sui tuoi dati.</p>
+<ul>
+<li>Email: <a href="mailto:info@offerteshock.it">info@offerteshock.it</a> (demo)</li>
+<li>Privacy: <a href="mailto:privacy@offerteshock.it">privacy@offerteshock.it</a> (demo)</li>
+</ul>
+<h4>FAQ rapide</h4>
+<details><summary>I prezzi cambiano: come mi tengo aggiornato?</summary><p>Aggiungi i prodotti tra i <b>Preferiti</b> e riceverai un alert quando scendono. Nei periodi caldi (Prime, Black Friday) aggiorniamo più volte al giorno.</p></details>
+<details><summary>I link di affiliazione aumentano il prezzo?</summary><p>No. Il prezzo per te non cambia. Se acquisti, il negozio riconosce una piccola commissione a Offerteshock.</p></details>
+<details><summary>Posso proporre un’offerta?</summary><p>Certo! Scrivici il link e perché secondo te è interessante. La valutiamo e, se valida, la pubblichiamo citando la fonte.</p></details>
+<details><summary>Come cancello il mio account o i dati?</summary><p>Invia una richiesta a privacy@offerteshock.it dalla mail con cui ti sei registrato. Ti rispondiamo entro pochi giorni lavorativi.</p></details>
 </div>
-<script>document.getElementById('y').textContent=new Date().getFullYear()</script>
-<script>/* SAFE NAV PRUNE */
-(function(){
-  var NAV_ROOT_SELECTOR = ".burger, .mobile-menu, #burger, [data-burger], .drawer, .drawer-menu";
-  var KILL_TEXT = ["privacy","termini","terms","condizioni","contatti"];
-  function norm(s){ return (s||"").toString().trim().toLowerCase().replace(/\s+/g," "); }
-  function pruneBurger(){
-    var roots = document.querySelectorAll(NAV_ROOT_SELECTOR);
-    roots.forEach(function(root){
-      root.querySelectorAll("a,button").forEach(function(el){
-        var label = norm(el.getAttribute("aria-label") || el.textContent);
-        if (!label) return;
-        if (KILL_TEXT.some(function(k){ return label.indexOf(k) === 0 || label === k; })){
-          var victim = el.closest("li") || el;
-          if (victim && victim.parentNode) victim.parentNode.removeChild(victim);
-        }
-      });
-    });
-  }
-  function pruneModals(){
-    var MODAL_SEL = ".modal,[role='dialog'],.modal-dialog,.mdc-dialog,.uk-modal,.drawer[role='dialog']";
-    document.querySelectorAll(MODAL_SEL).forEach(function(mod){
-      var head = mod.querySelector("[aria-label], h1, h2, h3, h4");
-      var text = "";
-      if (head) text = head.getAttribute("aria-label") || head.textContent || "";
-      else text = (mod.textContent || "").slice(0,200);
-      text = norm(text);
-      if (KILL_TEXT.some(function(k){ return text.indexOf(k) !== -1; })){
-        if (mod.parentNode) mod.parentNode.removeChild(mod);
-      }
-    });
-    document.querySelectorAll("a,button").forEach(function(t){
-      var tgt = ((t.getAttribute("href")||"") + " " + (t.getAttribute("data-target")||"") + " " + (t.getAttribute("data-bs-target")||"")).toLowerCase();
-      if (!tgt) return;
-      if (/(privacy|termini|terms|condizioni|contatt)/.test(tgt)){
-        var victim = t.closest("li") || t;
-        if (victim && victim.parentNode) victim.parentNode.removeChild(victim);
-      }
-    });
-  }
-  function run(){ pruneBurger(); pruneModals(); }
-  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", run); else run();
-})();
-</script>
-</body></html>
-
-
-
-
+  </section>
+</main>
+</body>
+</html>

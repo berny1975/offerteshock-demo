@@ -1,73 +1,31 @@
-﻿<!doctype html><html lang="it"><head>
+<!doctype html>
+<html lang="it">
+<head>
 <meta charset="utf-8">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<meta name="viewport" content="width=device-width,initial-scale=1"/>
-<meta name="theme-color" content="#0b0e13"/><title>Contatti Â· OfferteShock</title>
-<link rel="stylesheet" href="./assets/styles.css"/></head><body>
-<div class="wrap">
-  <div class="card">
-    <h1>Contattaci</h1>
-    <p>Per richieste o esercizio dei diritti privacy, scrivici.</p>
-    <form action="mailto:info@tuodominio.it" method="post" enctype="text/plain" onsubmit="alert('Si aprirÃ  il tuo client email per inviare la richiesta.');">
-      <div style="display:grid;gap:12px;max-width:520px">
-        <input required placeholder="Il tuo nome" name="nome" style="padding:12px;border-radius:10px;border:1px solid rgba(255,255,255,.15);background:#0f1320;color:#e7edf3">
-        <input required type="email" placeholder="La tua email" name="email" style="padding:12px;border-radius:10px;border:1px solid rgba(255,255,255,.15);background:#0f1320;color:#e7edf3">
-        <textarea required rows="5" placeholder="Messaggio" name="messaggio" style="padding:12px;border-radius:10px;border:1px solid rgba(255,255,255,.15);background:#0f1320;color:#e7edf3"></textarea>
-        <button class="btn" type="submit">Invia</button>
-      </div>
-    </form>
-    <p style="color:#aab4c3;margin-top:12px">Sostituisci <code>info@tuodominio.it</code> con la tua email o integra un servizio form esterno.</p>
-    <p><a class="btn" href="./index.html">Torna alla home</a></p>
-  </div>
-  <footer>Â© <span id="y"></span> OfferteShock Â· <a href="./privacy.html">Privacy</a> Â· <a href="./termini.html">Termini</a></footer>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Chi siamo</title>
+<link rel="icon" href="./assets/favicon.ico">
+<link rel="stylesheet" href="./assets/styles.css">
+</head>
+<body>
+<header style="padding:12px"><a href="./" aria-label="Torna alla Home">&larr; Torna alla Home</a></header>
+<main class="container" style="max-width:min(1100px,95%);margin:20px auto">
+  <h1 style="margin:0 0 16px 0">Chi siamo</h1>
+  <section class="page-content">
+<div class="dialog"><button class="close" data-close="">×</button>
+<h3>Chi siamo</h3>
+<p><b>Offerteshock</b> nasce da un’idea semplice: aiutarti a comprare meglio, non di più. Siamo un piccolo team indipendente (questa è una demo) che ogni giorno seleziona offerte reali, prova prodotti quando possibile e spiega con parole normali cosa conviene e cosa no. Niente fumo, niente clickbait: solo consigli che daremmo a un amico.</p>
+<h4>Il nostro metodo</h4>
+<ul>
+<li><b>Valore reale</b>: guardiamo lo <i>storico prezzo</i> e scartiamo i “finti sconti”.</li>
+<li><b>Utilità</b>: preferiamo prodotti che risolvono problemi, non solo “belle foto”.</li>
+<li><b>Trasparenza</b>: se usiamo link di affiliazione, il prezzo per te non cambia mai.</li>
+</ul>
+<h4>Perché fidarti</h4>
+<p>Scriviamo come compratori prima che come “siti di offerte”. Quando sbagliamo, lo diciamo. Quando un prodotto ha <b>pro</b> e <b>contro</b>, li mettiamo in chiaro. E se trovi un affare migliore, segnalalo: aggiornare e migliorare è parte del gioco.</p>
+<p><i>Vuoi parlare con noi?</i> Apri la sezione <a data-open="contact" href="#">Contatti</a> e scrivici.</p>
 </div>
-<script>document.getElementById('y').textContent=new Date().getFullYear()</script>
-<script>/* SAFE NAV PRUNE */
-(function(){
-  var NAV_ROOT_SELECTOR = ".burger, .mobile-menu, #burger, [data-burger], .drawer, .drawer-menu";
-  var KILL_TEXT = ["privacy","termini","terms","condizioni","contatti"];
-  function norm(s){ return (s||"").toString().trim().toLowerCase().replace(/\s+/g," "); }
-  function pruneBurger(){
-    var roots = document.querySelectorAll(NAV_ROOT_SELECTOR);
-    roots.forEach(function(root){
-      root.querySelectorAll("a,button").forEach(function(el){
-        var label = norm(el.getAttribute("aria-label") || el.textContent);
-        if (!label) return;
-        if (KILL_TEXT.some(function(k){ return label.indexOf(k) === 0 || label === k; })){
-          var victim = el.closest("li") || el;
-          if (victim && victim.parentNode) victim.parentNode.removeChild(victim);
-        }
-      });
-    });
-  }
-  function pruneModals(){
-    var MODAL_SEL = ".modal,[role='dialog'],.modal-dialog,.mdc-dialog,.uk-modal,.drawer[role='dialog']";
-    document.querySelectorAll(MODAL_SEL).forEach(function(mod){
-      var head = mod.querySelector("[aria-label], h1, h2, h3, h4");
-      var text = "";
-      if (head) text = head.getAttribute("aria-label") || head.textContent || "";
-      else text = (mod.textContent || "").slice(0,200);
-      text = norm(text);
-      if (KILL_TEXT.some(function(k){ return text.indexOf(k) !== -1; })){
-        if (mod.parentNode) mod.parentNode.removeChild(mod);
-      }
-    });
-    document.querySelectorAll("a,button").forEach(function(t){
-      var tgt = ((t.getAttribute("href")||"") + " " + (t.getAttribute("data-target")||"") + " " + (t.getAttribute("data-bs-target")||"")).toLowerCase();
-      if (!tgt) return;
-      if (/(privacy|termini|terms|condizioni|contatt)/.test(tgt)){
-        var victim = t.closest("li") || t;
-        if (victim && victim.parentNode) victim.parentNode.removeChild(victim);
-      }
-    });
-  }
-  function run(){ pruneBurger(); pruneModals(); }
-  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", run); else run();
-})();
-</script>
-</body></html>
-
-
-
-
+  </section>
+</main>
+</body>
+</html>

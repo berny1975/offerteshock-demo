@@ -1,62 +1,12 @@
-﻿<!doctype html><html lang="it"><head>
-<meta charset="utf-8">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<meta name="viewport" content="width=device-width,initial-scale=1"/>
-<meta name="theme-color" content="#0b0e13"/><title>404 Â· OfferteShock</title>
+<!doctype html><html lang="it"><head>
+<meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<meta name="theme-color" content="#0b0e13"/><title>404 · OfferteShock</title>
 <link rel="stylesheet" href="./assets/styles.css"/></head><body>
 <div class="wrap">
   <div class="card">
-    <h1>404 â€” Pagina non trovata</h1>
-    <p>La pagina che cerchi non esiste o Ã¨ stata spostata.</p>
+    <h1>404 — Pagina non trovata</h1>
+    <p>La pagina che cerchi non esiste o è stata spostata.</p>
     <p><a class="btn" href="./index.html">Torna alla home</a></p>
   </div>
 </div>
-<script>/* SAFE NAV PRUNE */
-(function(){
-  var NAV_ROOT_SELECTOR = ".burger, .mobile-menu, #burger, [data-burger], .drawer, .drawer-menu";
-  var KILL_TEXT = ["privacy","termini","terms","condizioni","contatti"];
-  function norm(s){ return (s||"").toString().trim().toLowerCase().replace(/\s+/g," "); }
-  function pruneBurger(){
-    var roots = document.querySelectorAll(NAV_ROOT_SELECTOR);
-    roots.forEach(function(root){
-      root.querySelectorAll("a,button").forEach(function(el){
-        var label = norm(el.getAttribute("aria-label") || el.textContent);
-        if (!label) return;
-        if (KILL_TEXT.some(function(k){ return label.indexOf(k) === 0 || label === k; })){
-          var victim = el.closest("li") || el;
-          if (victim && victim.parentNode) victim.parentNode.removeChild(victim);
-        }
-      });
-    });
-  }
-  function pruneModals(){
-    var MODAL_SEL = ".modal,[role='dialog'],.modal-dialog,.mdc-dialog,.uk-modal,.drawer[role='dialog']";
-    document.querySelectorAll(MODAL_SEL).forEach(function(mod){
-      var head = mod.querySelector("[aria-label], h1, h2, h3, h4");
-      var text = "";
-      if (head) text = head.getAttribute("aria-label") || head.textContent || "";
-      else text = (mod.textContent || "").slice(0,200);
-      text = norm(text);
-      if (KILL_TEXT.some(function(k){ return text.indexOf(k) !== -1; })){
-        if (mod.parentNode) mod.parentNode.removeChild(mod);
-      }
-    });
-    document.querySelectorAll("a,button").forEach(function(t){
-      var tgt = ((t.getAttribute("href")||"") + " " + (t.getAttribute("data-target")||"") + " " + (t.getAttribute("data-bs-target")||"")).toLowerCase();
-      if (!tgt) return;
-      if (/(privacy|termini|terms|condizioni|contatt)/.test(tgt)){
-        var victim = t.closest("li") || t;
-        if (victim && victim.parentNode) victim.parentNode.removeChild(victim);
-      }
-    });
-  }
-  function run(){ pruneBurger(); pruneModals(); }
-  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", run); else run();
-})();
-</script>
 </body></html>
-
-
-
-

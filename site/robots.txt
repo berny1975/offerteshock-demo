@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://berny1975.github.io/offerteshock-demo/sitemap.xml

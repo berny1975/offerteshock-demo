@@ -1,0 +1,1246 @@
+<!DOCTYPE html>
+
+<html lang="it">
+<head>
+<meta name="theme-color" content="#0b0c10" />
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1,viewport-fit=cover" name="viewport"/>
+<title>Offerteshock.it — Offerte, Guide, Blog e Coupon (SPA singolo file)</title>
+<meta content="Offerteshock: offerte verificate, confronto prezzi, guide e blog. Preferiti, login/registrati in modale, ricerca con suggerimenti, burger popover, barra migliori offerte." name="description"/>
+<link crossorigin="" href="https://images.unsplash.com" rel="preconnect"/>
+<style>
+  :root{
+    --bg:#0b0c10; --panel:#0f1422; --card:#121318; --muted:#9aa0a6; --text:#e8eaed;
+    --accent:#22c55e; --accent-2:#3b82f6; --danger:#ef4444; --warn:#f59e0b; --ok:#10b981; --border:#1f2937;
+    --container: min(96vw, 1200px); --gap: 12px;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{margin:0;background:var(--bg);color:var(--text);font:16px/1.46 system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,Noto Sans,sans-serif}
+  a{color:inherit;text-decoration:none}
+  button{font:inherit;color:inherit;background:none;border:none}
+  .container{width:var(--container);margin:0 auto;padding:12px}
+  /* ===== Header full-bleed (2 righe fisse) ===== */
+  header.fullbleed{
+    position:sticky; top:0; z-index:80;
+    width:100vw; margin-left:calc(50% - 50vw); margin-right:calc(50% - 50vw);
+    background:rgba(11,12,16,.9); border-bottom:1px solid var(--border); backdrop-filter: blur(6px);
+  }
+  .h-inner{ width:var(--container); margin:0 auto; padding:10px 12px;
+    display:grid; grid-template-areas: "brand auth" "search search";
+    grid-template-columns: 1fr auto; row-gap:10px; column-gap:12px; align-items:center;
+  }
+  .brand{grid-area:brand; display:inline-flex; align-items:center; gap:8px;}
+  .brand .burger{width:36px;height:36px;border:1px solid var(--border);background:#0f1422;border-radius:8px;display:inline-flex;align-items:center;justify-content:center;font-size:18px;cursor:pointer}
+  .brand svg{width:20px;height:20px}
+  .brand span{font-weight:700;font-size:15px;background:linear-gradient(90deg,var(--accent),var(--accent-2));-webkit-background-clip:text;background-clip:text;color:transparent; letter-spacing:.2px}
+  #authDock{grid-area:auth; display:flex; gap:6px; align-items:center}
+  .btn{cursor:pointer;border:1px solid var(--border);background:#161821;color:var(--text);padding:8px 10px;border-radius:10px;transition:transform .06s ease,background .2s, box-shadow .2s;touch-action:manipulation; font-size:.9rem}
+  .btn:hover{transform:translateY(-1px); box-shadow:0 6px 18px rgba(0,0,0,.25)}
+  .btn.primary{background:var(--accent);color:#03150a;border-color:transparent;font-weight:700}
+  .btn.ghost{background:#0f1117}
+  .btn.xs{padding:6px 8px;font-size:.84rem}
+  .fav-pill{ position:relative;width:36px;height:36px;border:1px solid var(--border);background:#0f1117;border-radius:999px;display:inline-flex;align-items:center;justify-content:center}
+  .fav-pill .count{ position:absolute;top:-4px;right:-4px;min-width:16px;height:16px;line-height:16px;padding:0 4px;border-radius:999px;background:#ff4d6d;color:#fff;font-size:10px;border:2px solid #0b0f16;display:inline-flex;align-items:center;justify-content:center}
+  /* Ricerca + filtri compatti (solo in alto) */
+  .search{ grid-area:search; display:flex; gap:8px; width:100%; align-items:center; flex-wrap:wrap }
+  .ctrl{ display:inline-flex; align-items:center; gap:6px; }
+  .label{ font-size:.82rem; color:var(--muted); opacity:.95 }
+  /* Custom SELECT styled like the theme (global) */
+  :root{ --sel-h:40px; --select-br:10px; --select-bw:1px }
+  .select{ position:relative; display:inline-flex; align-items:center; border:none; background:var(--bg); color:var(--text); border-radius:var(--select-br); height:var(--sel-h); padding:0 12px; overflow:hidden; width:max-content; min-width:0; box-shadow:none; outline:none }
+  .select.small{ height:36px }
+  .select:hover{ background:var(--bg) }
+  .select:focus-within{ border:none !important; box-shadow:none !important; background:var(--bg) !important }
+  .select::after{ display:none !important; content:none !important }
+  .select select{ appearance:none; -webkit-appearance:none; -moz-appearance:none; background:var(--bg) !important; color:inherit; border:none !important; outline:none !important; font:inherit; height:100%; line-height:calc(var(--sel-h) - 2px); padding:0; margin:0; cursor:pointer; min-width:0; width:auto; box-shadow:none !important; -webkit-tap-highlight-color: transparent }
+  .select select:focus{ outline:none }
+  .select option{ color:var(--text); background:var(--bg); }
+  /* gruppo input+button unito */
+  .searchbar{ display:flex; align-items:center; gap:0; flex:1; min-width:200px }
+  .searchbar .search-in{ flex:1; min-width:140px; border:1px solid var(--border); background:#0f1117; color:#e5e7eb; padding:10px; height:40px; border-radius:10px 0 0 10px; border-right:none }
+  .searchbar .btn-search{ height:40px; border:1px solid var(--border); border-left:none; border-radius:0 10px 10px 0; background:#0f1117 }
+  .searchbar .btn-search:hover{ background:#111827 }
+.searchbar .search-in:focus{ outline:none; border-color:var(--border); box-shadow:none }
+.btn:focus{ outline:none; box-shadow:none }
+
+  /* Suggest box attaccato all'input */
+  .suggest{position:fixed; z-index:90; display:none; background:#0b0f16; border:1px solid var(--border); border-radius:12px; box-shadow:0 10px 30px rgba(0,0,0,.35); max-height:50vh; overflow:auto; width:360px}
+  .suggest.open{display:block}
+  .suggest .head{font-size:12px;color:#9aa4b2;padding:8px 12px;border-bottom:1px solid var(--border); position:sticky; top:0; background:#0b0f16}
+  .sugg-item{padding:10px 12px; cursor:pointer; display:flex; align-items:center; gap:8px}
+  .sugg-item:hover{background:#121826}
+  /* Burger Popover */
+  .pop-scrim{position:fixed; inset:0; z-index:9998; background:transparent; display:none}
+  .pop{position:fixed; z-index:9999; min-width:220px; width:min(92vw,340px); background:#0f1422; color:#e7ecf5; border:1px solid var(--border); border-radius:16px;
+       box-shadow:0 22px 60px rgba(0,0,0,.5), 0 2px 8px rgba(0,0,0,.35); overflow:hidden; opacity:0; transform: translateY(-8px) scale(.88); filter: blur(6px);
+       transform-origin: var(--pop-ox,24px) var(--pop-oy,0px); pointer-events:none; transition: opacity .14s ease, transform .38s cubic-bezier(.2,.8,.2,1.1), filter .28s ease; display:none}
+  .pop.open{opacity:1; transform:translateY(0) scale(1); filter:blur(0); pointer-events:auto; display:block}
+  .pop::after{content:""; position:absolute; width:12px; height:12px; background:#0f1422; border-left:1px solid var(--border); border-top:1px solid var(--border); transform:rotate(45deg); left: var(--caret-x, 24px); top: var(--caret-top, -6px);}
+  .pop-nav{display:flex; flex-direction:column; gap:8px; padding:10px}
+  .pop-item{padding:12px 14px; border-radius:12px; border:1px solid var(--border); background:#101626; cursor:pointer; text-align:left}
+  .pop-item:hover{background:#132032}
+  /* Barra Ticker migliori offerte */
+  .ticker-wrap{ width:var(--container); margin:8px auto 0; padding:0 12px; }
+  .ticker{ position:relative; overflow:hidden; border:1px solid var(--border); background:#0f1422; border-radius:12px; }
+  .ticker-track{ display:flex; gap:18px; padding:10px 12px; width:max-content; animation: marquee 28s linear infinite; }
+  .ticker:hover .ticker-track{ animation-play-state: paused; }
+  .tick{ white-space:nowrap; font-size:.92rem; background:#0b111f; border:1px solid var(--border); padding:6px 10px; border-radius:999px; display:inline-flex; gap:8px; align-items:center }
+  .tick b{color:#f59e0b}
+  @keyframes marquee{
+    from{ transform: translateX(0); } to{ transform: translateX(-50%); }
+  }
+  /* Sezioni e griglie */
+  main.container{padding-top:8px}
+  .section-head{ display:flex; align-items:center; justify-content:space-between; gap:8px; margin:16px 0 8px 0}
+  .section-title{font-weight:800}
+  .hero{display:grid;grid-template-columns:2fr 1fr;gap:var(--gap);margin:14px 0}
+  .grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--gap)}
+  /* Card */
+  .card{background:var(--card);border:1px solid var(--border);border-radius:16px;overflow:hidden;position:relative;transition:transform .1s ease, box-shadow .2s}
+  .card:hover{transform:translateY(-2px);box-shadow:0 10px 28px rgba(0,0,0,.28)}
+  .card img{width:100%;aspect-ratio:16/9;object-fit:cover;display:block}
+  .badge{position:absolute;top:10px;left:10px;background:linear-gradient(90deg,#f59e0b,#eab308);font-weight:700;padding:6px 10px;border-radius:999px;font-size:12px; width:auto; white-space:nowrap; z-index:2}
+  .badge.bomba{background:linear-gradient(90deg,#ef4444,#f97316)}
+  .badge.errore{background:linear-gradient(90deg,#3b82f6,#22d3ee)}
+  .fav-btn{position:absolute;top:10px;right:10px;border:1px solid var(--border);background:#0f1117;color:#d1d5db;border-radius:999px;padding:6px 10px;font-weight:700;cursor:pointer;box-shadow:0 4px 12px rgba(0,0,0,.28)}
+  .fav-btn.active{background:#1f2937;color:#ff4d6d;border-color:#2b3345}
+  .content{padding:12px}
+  .title{font-weight:700;margin:6px 0 4px 0}
+  .desc{color:var(--muted); font-size:.95rem; margin:0 0 8px 0; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden}
+  .stars{color:#facc15}
+  .price{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
+  .now{font-size:clamp(18px,2.6vw,20px);font-weight:800}
+  .was{color:var(--muted);text-decoration:line-through}
+  .discount{color:var(--ok);font-weight:800}
+  .tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+  .tag{display:inline-flex;gap:6px;align-items:center;font-size:12px;color:#cbd5e1;background:#0f1117;border:1px solid var(--border);border-radius:999px;padding:4px 8px}
+  .cta{display:flex;gap:8px;margin-top:10px}
+  .cta .btn{flex:1;text-align:center}
+  .coupon-chip{padding:6px 8px; border-radius:10px; background:#0f172a; border:1px solid var(--border); font-size:.85rem; display:inline-flex; align-items:center; gap:8px;}
+  .coupon-chip code{ background:#0b1020; padding:2px 4px; border-radius:6px; border:1px solid var(--border); }
+  .copy-ok{ color: var(--accent-2); font-weight:700; display:none; }
+  .copy-ok.show{ display:inline; }
+  /* Modali base */
+  .modal{position:fixed;inset:0;background:rgba(4,6,10,.65);backdrop-filter:blur(3px);display:none;align-items:center;justify-content:center;z-index:85}
+  .dialog{background:#0f1117;border:1px solid var(--border);border-radius:16px;max-width:980px;width:96%;padding:16px;max-height:86vh;overflow:auto;position:relative}
+  .dialog h3{margin-top:0}
+  .close{position:absolute;right:12px;top:10px;border:1px solid var(--border);background:#0f1117;border-radius:999px;color:#e5e7eb;padding:6px 10px;cursor:pointer}
+  .error{display:none;background:#311; border:1px solid #a33; color:#fdd; padding:10px; border-radius:10px; margin:12px 0}
+  /* Cursors */
+  body{cursor:default} a,button,.btn,.fav-btn,.pop-item,[data-open],[data-close],[data-share],[data-copy],.sugg-item{cursor:pointer} input,textarea{cursor:text}
+  /* Responsive */
+  @media (max-width: 860px){
+    .hero{grid-template-columns:1fr}
+    .grid{grid-template-columns:1fr}
+    .cta{flex-direction:column} .cta .btn{width:100%}
+    .ticker-track{animation-duration: 40s;}
+  }
+  /* disposizione speciale: verticale mobile => Ordina come 4a riga */
+  @media (max-width: 860px) and (orientation:portrait){
+    .search{gap:8px}
+    .search .ctrl.cat{ order:1; width:100% }
+    .search .searchbar{ order:2; width:100% }
+    .search .ctrl.sort{ order:4; width:100% }
+  }
+  @media (min-width:861px) and (max-width: 1200px){
+    .hero{grid-template-columns:1fr 1fr}
+    .grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  }
+
+/* Match box style & spacing to input boxes */
+.search .select.small{ height:36px; border-radius: var(--select-br); border:none; }
+.search .select.small select{ padding-right: 4px }
+
+
+/* Remove native dropdown arrows on as many browsers as possible */
+.select select{
+  background-image: none !important;
+  padding-right: 0;
+}
+.select select::-ms-expand{ display:none; } /* old IE/Edge */
+.select select::-webkit-contacts-auto-fill-button{ visibility:hidden; display:none; pointer-events:none; } /* iOS oddity */
+
+:root{ color-scheme: dark; }
+
+/* --- Deal Detail Modal --- */
+.dialog.wide{ max-width: 980px; width: calc(100% - 24px); }
+.deal-head{ display:flex; gap:16px; align-items:flex-start; border-bottom:1px solid var(--border); padding-bottom:12px; margin-bottom:16px }
+.deal-title{ font-size:1.25rem; font-weight:700; margin:0 }
+.deal-meta{ display:flex; gap:12px; flex-wrap:wrap; color:var(--muted); font-size:.95rem }
+.deal-price{ display:flex; align-items:baseline; gap:8px; margin:8px 0; }
+.deal-price .now{ font-size:1.6rem; font-weight:800; color:var(--accent) }
+.deal-price .was{ text-decoration:line-through; color:var(--muted) }
+.deal-actions{ display:flex; gap:8px; flex-wrap:wrap }
+.btn.ghost{ background:transparent; border:1px solid var(--border) }
+.detail-grid{ display:grid; grid-template-columns: 1.1fr .9fr; gap:18px; }
+@media (max-width: 860px){ .detail-grid{ grid-template-columns: 1fr } }
+.gallery{ display:grid; grid-template-columns: 1fr; gap:10px }
+.gallery .main-img{ width:100%; border-radius:12px; object-fit:cover; aspect-ratio: 4/3; background:#0b0d12 }
+.gallery .thumbs{ display:flex; gap:8px; overflow:auto; scrollbar-width:none }
+.gallery .thumbs img{ height:68px; width:auto; border-radius:10px; opacity:.9; cursor:pointer }
+.gallery .thumbs img:hover{ opacity:1 }
+.specs{ background:var(--panel); border:1px solid var(--border); border-radius:12px; padding:12px }
+.specs h4{ margin:0 0 8px 0; font-size:1rem }
+.specs ul{ margin:0; padding:0; list-style:none }
+.specs li{ display:flex; justify-content:space-between; gap:12px; padding:6px 0; border-bottom:1px dashed var(--border) }
+.specs li:last-child{ border-bottom:none }
+.pros-cons{ display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:14px }
+@media (max-width: 700px){ .pros-cons{ grid-template-columns:1fr } }
+.box.pros{ border:1px solid #1b4d2b; background:#0c1a12; border-radius:12px; padding:12px }
+.box.cons{ border:1px solid #5b1a1a; background:#160d0d; border-radius:12px; padding:12px }
+.box h5{ margin:0 0 8px 0 }
+.longdesc{ color:var(--text); opacity:.9 }
+.disclosure{ color:var(--muted); font-size:.9rem; margin-top:8px }
+.badges{ display:flex; gap:8px; flex-wrap:wrap }
+.badge{ background:rgba(255,255,255,.06); border:1px solid var(--border); padding:4px 8px; border-radius:999px; font-size:.85rem }
+
+
+.os-subheader .brand .label{opacity:.8;margin-right:6px}
+.os-subheader .brand .prod-title{font-weight:800}
+
+/* === Mobile/Responsive optimization patch (v4) === */
+:root{
+  --font-base: clamp(15px, 0.65vw + 0.85rem, 16.5px);
+  --tap-min: 44px;
+}
+html, body { font-size: var(--font-base); -webkit-text-size-adjust: 100%; }
+button, .btn, .fav-pill, .burger, .pop-item { min-height: var(--tap-min); }
+.burger { width: var(--tap-min); height: var(--tap-min); }
+img{ height:auto; max-width:100%; }
+@media (hover:hover){ .btn:hover{ transform: translateY(-1px); box-shadow: 0 6px 18px rgba(0,0,0,.25) } }
+@media (hover:none){ .btn:hover{ transform: none; box-shadow: none } }
+.hero img, .card img, .gallery .main-img{ content-visibility:auto; contain-intrinsic-size: 600px 400px; }
+@media (max-width: 1024px){ .grid{ grid-template-columns: repeat(2, minmax(0,1fr)); } }
+@media (max-width: 720px){
+  .grid{ grid-template-columns: 1fr; }
+  .searchbar{ width:100%; }
+  .search .ctrl.cat, .search .ctrl.sort{ width:100%; }
+}
+@media (prefers-reduced-motion: reduce){
+  .ticker-track{ animation: none !important }
+  .pop, .card, .btn{ transition: none !important }
+}
+:focus-visible{ outline: 2px solid #3b82f6; outline-offset: 2px; }
+@media (max-width: 640px){
+  .desc{ -webkit-line-clamp: 3; }
+  .title{ line-height: 1.22 }
+}
+:target{ scroll-margin-top: 76px; }
+
+</style></head>
+<body>
+<header class="fullbleed">
+<div class="h-inner" id="hInner">
+<div class="brand">
+<button aria-label="Menu" class="burger" id="btnBurger" title="Menu">☰</button>
+<svg fill="none" viewbox="0 0 24 24"><path d="M4 7.5C4 6.12 5.12 5 6.5 5h3A2.5 2.5 0 0 1 12 7.5v9A2.5 2.5 0 0 1 9.5 19h-3A2.5 2.5 0 0 1 4 16.5v-9Z" fill="#22c55e"></path><path d="M12 7.5C12 6.12 13.12 5 14.5 5h3A2.5 2.5 0 0 1 20 7.5v1A2.5 2.5 0 0 1 17.5 11h-3A2.5 2.5 0 0 1 12 8.5v-1Z" fill="#3b82f6"></path></svg>
+<span>Offerteshock.it</span>
+</div>
+<div id="authDock">
+<div class="fav-pill" id="favToggle" title="Preferiti">❤️ <span class="count" id="favCount">0</span></div>
+<button class="btn xs" id="btnLogin">Login</button>
+<button class="btn primary xs" id="btnRegister">Registrati</button>
+<button class="btn xs" id="btnLogout" style="display:none">Logout</button>
+</div>
+<div class="search" role="search">
+<div class="ctrl cat">
+<span class="label" id="labCat">Categorie:</span>
+<span class="select small"><select aria-labelledby="labCat" id="catSelect">
+<option value="all">Tutte</option>
+<option value="casa_cucina">Casa e Cucina</option>
+<option value="animali">Prodotti per Animali</option>
+<option value="bellezza">Bellezza &amp; Cura Persona</option>
+<option value="fai_da_te">Fai da Te e Giardinaggio</option>
+<option value="infanzia">Prodotti per l'Infanzia</option>
+</select></span>
+</div>
+<div class="searchbar">
+<input aria-label="Cerca" autocomplete="off" class="search-in" id="q" placeholder="Cerca brand, modello, categoria…" type="search"/>
+<button aria-label="Esegui ricerca" class="btn ghost btn-search" id="btnSearch">Cerca</button>
+</div>
+
+</div>
+</div>
+</header>
+<!-- Burger Popover + scrim -->
+<div aria-hidden="true" class="pop-scrim" id="popScrim"></div>
+<div aria-hidden="true" class="pop" id="popMenu" role="menu">
+<nav class="pop-nav">
+<button class="pop-item" data-open="home">Home</button>
+<button class="pop-item" data-open="about">Chi Siamo</button>
+<button class="pop-item" data-open="guides">Guide</button>
+<button class="pop-item" data-open="blog">Blog</button>
+<button class="pop-item" data-open="favs">Preferiti</button>
+<button class="pop-item" data-open="settings">Impostazioni</button>
+<button class="pop-item" data-open="privacy">Privacy</button>
+<button class="pop-item" data-open="cookie">Cookie</button>
+<button class="pop-item" data-open="tos">Termini</button>
+<button class="pop-item" data-open="contact">Contatti</button>
+</nav>
+</div>
+<!-- Barra migliori offerte (ticker) -->
+<main class="container">
+<div class="section-head">
+<div class="section-title">Offerta in evidenza</div>
+</div>
+<section class="hero" id="hero"></section>
+<div class="section-head">
+<div class="section-title">Top venduti</div>
+</div>
+<section class="grid" id="tops"></section>
+<div class="section-head">
+<div class="section-title">Tutte le offerte <span id="resultsCount">0 risultati</span></div>
+</div>
+<section class="grid" id="grid"></section>
+<div class="footer" style="opacity:.8;margin:28px 0">
+<p>Demo offline con il tuo tema. Sostituisci i link con i tuoi deeplink affiliati. In qualità di Affiliato Amazon, potrei ricevere un compenso dagli acquisti idonei.</p>
+<p><a data-open="privacy" href="#">Privacy</a> · <a data-open="cookie" href="#">Cookie</a> · <a data-open="tos" href="#">Termini</a></p>
+</div>
+<section class="modal" id="m-about"><div class="dialog"><button class="close" data-close="">×</button>
+<h3>Chi siamo</h3>
+<p><b>Offerteshock</b> nasce da un’idea semplice: aiutarti a comprare meglio, non di più. Siamo un piccolo team indipendente (questa è una demo) che ogni giorno seleziona offerte reali, prova prodotti quando possibile e spiega con parole normali cosa conviene e cosa no. Niente fumo, niente clickbait: solo consigli che daremmo a un amico.</p>
+<h4>Il nostro metodo</h4>
+<ul>
+<li><b>Valore reale</b>: guardiamo lo <i>storico prezzo</i> e scartiamo i “finti sconti”.</li>
+<li><b>Utilità</b>: preferiamo prodotti che risolvono problemi, non solo “belle foto”.</li>
+<li><b>Trasparenza</b>: se usiamo link di affiliazione, il prezzo per te non cambia mai.</li>
+</ul>
+<h4>Perché fidarti</h4>
+<p>Scriviamo come compratori prima che come “siti di offerte”. Quando sbagliamo, lo diciamo. Quando un prodotto ha <b>pro</b> e <b>contro</b>, li mettiamo in chiaro. E se trovi un affare migliore, segnalalo: aggiornare e migliorare è parte del gioco.</p>
+<p><i>Vuoi parlare con noi?</i> Apri la sezione <a data-open="contact" href="#">Contatti</a> e scrivici.</p>
+</div></section>
+</main>
+<!-- Modali -->
+<section class="modal" id="m-guides"><div class="dialog"><button class="close" data-close="">×</button><h3>Guide</h3><div class="grid" id="guides"></div></div></section>
+<section class="modal" id="m-blog"><div class="dialog"><button class="close" data-close="">×</button><h3>Blog</h3><div class="grid" id="blog"></div></div></section>
+<section class="modal" id="m-article"><div class="dialog"><button class="close" data-close="">×</button><div id="article"></div></div></section>
+<section class="modal" id="m-favs"><div class="dialog"><button class="close" data-close="">×</button><h3>I tuoi preferiti</h3><div class="grid" id="favs"></div></div></section>
+<section class="modal" id="m-settings"><div class="dialog"><button class="close" data-close="">×</button><h3>Impostazioni</h3><div id="settings"><p>(Demo) Qui potrai scegliere categorie, notifiche, email.</p></div></div></section>
+<section class="modal" id="m-login"><div class="dialog"><button class="close" data-close="">×</button><h3>Accedi</h3><div class="form"><label>Email<br/><input id="loginEmail" type="email"/></label><br/><label>Password<br/><input id="loginPwd" type="password"/></label><br/><button class="btn primary" id="doLogin">Login</button></div></div></section>
+<section class="modal" id="m-register"><div class="dialog"><button class="close" data-close="">×</button><h3>Crea account</h3><div class="form"><label>Nome<br/><input id="regName"/></label><br/><label>Email<br/><input id="regEmail" type="email"/></label><br/><label>Password<br/><input id="regPwd" type="password"/></label><br/><button class="btn primary" id="doRegister">Registrati</button></div></div></section>
+<section class="modal" id="m-privacy"><div class="dialog"><button class="close" data-close="">×</button>
+<h3>Informativa Privacy (demo, ispirata al GDPR)</h3>
+<p>Questa pagina spiega come Offerteshock (demo) tratta i tuoi dati personali ai sensi del Regolamento (UE) 2016/679 (“GDPR”).</p>
+<h4>Titolare del trattamento</h4>
+<p>Offerteshock — Email: privacy@offerteshock.it (demo). Eventuale DPO: dpo@offerteshock.it (demo).</p>
+<h4>Tipi di dati e finalità</h4>
+<ul>
+<li><b>Dati di contatto</b> (email) — per creare l’account e inviarti notifiche/aggiornamenti su tua richiesta.</li>
+<li><b>Preferenze</b> (categorie, preferiti) — per personalizzare le offerte.</li>
+<li><b>Dati tecnici</b> (log, cookie tecnici) — per sicurezza e funzionamento del sito.</li>
+</ul>
+<h4>Basi giuridiche</h4>
+<ul>
+<li><b>Contratto</b>: erogazione dei servizi richiesti (es. account).</li>
+<li><b>Consenso</b>: newsletter/marketing, cookie non tecnici.</li>
+<li><b>Legittimo interesse</b>: prevenzione frodi, sicurezza.</li>
+</ul>
+<h4>Tempi di conservazione</h4>
+<p>Conserviamo i dati per il tempo strettamente necessario a fornirti il servizio o finché non revoci il consenso (per le comunicazioni).</p>
+<h4>Destinatari</h4>
+<p>Fornitori di hosting, strumenti di analisi, piattaforme email e partner di affiliazione (in forma limitata e nel rispetto dei contratti).</p>
+<h4>Diritti dell’interessato</h4>
+<p>Puoi esercitare i diritti di accesso, rettifica, cancellazione, limitazione, portabilità e opposizione scrivendo a privacy@offerteshock.it (demo). Hai anche il diritto di proporre reclamo al Garante.</p>
+<p><i>Nota</i>: questo testo è un esempio e va adattato alla tua realtà e verificato con un professionista.</p>
+</div></section>
+<section class="modal" id="m-cookie"><div class="dialog"><button class="close" data-close="">×</button>
+<h3>Cookie Policy (demo)</h3>
+<p>Usiamo cookie tecnici per far funzionare il sito e, previo consenso, cookie di preferenze e di misurazione.</p>
+<h4>Tipi di cookie</h4>
+<ul>
+<li><b>Tecnici</b>: necessari (autenticazione, preferiti, sicurezza).</li>
+<li><b>Preferenze</b>: ricordano scelte (categorie, filtri).</li>
+<li><b>Misurazione</b>: statistiche anonime aggregate (se abilitate).</li>
+</ul>
+<h4>Gestione consenso</h4>
+<p>Puoi modificare il consenso in ogni momento dalle Impostazioni o dalle preferenze del browser. Il rifiuto dei cookie non tecnici non compromette l’uso del sito.</p>
+</div></section>
+<section class="modal" id="m-tos"><div class="dialog"><button class="close" data-close="">×</button>
+<h3>Termini di Servizio (demo)</h3>
+<p>Benvenuto su Offerteshock (demo). Usando il sito accetti i seguenti termini.</p>
+<h4>1. Oggetto</h4>
+<p>Segnaliamo offerte, scriviamo guide e forniamo link affiliati a negozi terzi (es. Amazon). Non vendiamo direttamente prodotti.</p>
+<h4>2. Accuratezza prezzi e disponibilità</h4>
+<p>I prezzi cambiano di frequente: verifica sempre nel negozio prima di acquistare. Non siamo responsabili di variazioni, errori o indisponibilità.</p>
+<h4>3. Affiliazioni</h4>
+<p>Potremmo ricevere una commissione dagli acquisti idonei. L’uso dei link affiliati non modifica il prezzo per l’utente.</p>
+<h4>4. Uso del sito</h4>
+<p>È vietato lo scraping massivo e l’uso per scopi illeciti. È richiesta un’età minima di 16 anni per creare un account.</p>
+<h4>5. Responsabilità</h4>
+<p>Il sito è fornito “così com’è”. Non siamo responsabili di danni indiretti o consequenziali. La responsabilità massima è limitata, nei limiti di legge.</p>
+<h4>6. Modifiche</h4>
+<p>Possiamo aggiornare i Termini. L’uso continuato del sito implica accettazione delle modifiche.</p>
+</div></section>
+<section class="modal" id="m-contact"><div class="dialog"><button class="close" data-close="">×</button>
+<h3>Contatti</h3>
+<p>Scrivici per segnalazioni, collaborazioni o domande sui tuoi dati.</p>
+<ul>
+<li>Email: <a href="mailto:info@offerteshock.it">info@offerteshock.it</a> (demo)</li>
+<li>Privacy: <a href="mailto:privacy@offerteshock.it">privacy@offerteshock.it</a> (demo)</li>
+</ul>
+<h4>FAQ rapide</h4>
+<details><summary>I prezzi cambiano: come mi tengo aggiornato?</summary><p>Aggiungi i prodotti tra i <b>Preferiti</b> e riceverai un alert quando scendono. Nei periodi caldi (Prime, Black Friday) aggiorniamo più volte al giorno.</p></details>
+<details><summary>I link di affiliazione aumentano il prezzo?</summary><p>No. Il prezzo per te non cambia. Se acquisti, il negozio riconosce una piccola commissione a Offerteshock.</p></details>
+<details><summary>Posso proporre un’offerta?</summary><p>Certo! Scrivici il link e perché secondo te è interessante. La valutiamo e, se valida, la pubblichiamo citando la fonte.</p></details>
+<details><summary>Come cancello il mio account o i dati?</summary><p>Invia una richiesta a privacy@offerteshock.it dalla mail con cui ti sei registrato. Ti rispondiamo entro pochi giorni lavorativi.</p></details>
+</div></section>
+<script>
+/* ========= Utils ========= */
+const qs = s => document.querySelector(s);
+const qsa = s => [...document.querySelectorAll(s)];
+const ce = (t,cls) => Object.assign(document.createElement(t), cls?{className:cls}:{});
+const fmtEur = n => new Intl.NumberFormat('it-IT',{style:'currency',currency:'EUR',maximumFractionDigits:0}).format(n);
+
+/* ========= Categorie ========= */
+const CAT_LABELS = {
+  all: "Tutte",
+  casa_cucina: "Casa e Cucina",
+  animali: "Prodotti per Animali",
+  bellezza: "Bellezza & Cura Persona",
+  fai_da_te: "Fai da Te e Giardinaggio",
+  infanzia: "Prodotti per l'Infanzia"
+};
+const catLabel = k => CAT_LABELS[k] || k;
+
+/* ========= Demo data ========= */
+const AMAZON_TAG="YOUR_TAG-21";
+const DEALS=[
+  { id:"d1", title:"Friggitrice ad Aria 5.5L", desc:"Cestello antiaderente, 8 programmi, facile da pulire. Ideale per porzioni familiari con minore olio.", rating:4.6, reviews:3560, cat:"casa_cucina", store:"Amazon", merchant:"amazon", priceNow:89, priceWas:139, discount:36, coupon:"AIR10", image:"https://images.unsplash.com/photo-1606756790138-261c7d3113b9?q=80&w=1200&auto=format&fit=crop", history:[139,129,119,99,89], addedAt:"2025-08-05", links:{ amazon:"https://www.amazon.it/dp/B08XYZXYZ" , gallery:['https://images.unsplash.com/photo-1606756790138-261c7d3113b9?q=80&w=1200&auto=format&fit=crop','https://images.unsplash.com/photo-1546069901-ba9599a7e63c?q=80&w=1200&auto=format&fit=crop','https://images.unsplash.com/photo-1543352634-8730a9b43ae4?q=80&w=1200&auto=format&fit=crop'], pros:['Cuoce in modo uniforme','Cestello grande per famiglia','Facile da pulire','Programmi essenziali, non troppi'], cons:['Ingombro sul piano cucina','Nessuna app/ricette integrate','Rumore ventola udibile a piena potenza'], specs:[['Capienza','5.5 L'],['Potenza','1700 W'],['Lavastoviglie','Cestello sì'],['Programmi','8'],['Garanzia','2 anni']], longDesc:`Abbiamo cucinato patate, pollo e verdure per più giorni: la resa è stata costante, con doratura uniforme senza odori forti. Non è un modello “smart”: per molti è un pro (meno complessità), per chi vuole app/appunti è un contro. Dopo 2 settimane di uso, il rivestimento è ancora perfetto. Consigliata a chi vuole qualità senza spendere troppo.`} },
+  { id:"d2", title:"Cibo Secco Premium per Cani 12kg", desc:"Ricco di proteine con ingredienti dichiarati, senza coloranti. Sacco richiudibile anti-odore.", rating:4.7, reviews:1420, cat:"animali", store:"Zooplus", merchant:"awin", priceNow:39, priceWas:59, discount:34, coupon:"DOG5", image:"https://images.unsplash.com/photo-1548199973-03cce0bbc87b?q=80&w=1200&auto=format&fit=crop", history:[59,55,49,45,39], addedAt:"2025-08-06", links:{ awin:"https://www.awin1.com/cread.php?awinmid=222&awinaffid=333" , gallery:['https://images.unsplash.com/photo-1548199973-03cce0bbc87b?q=80&w=1200&auto=format&fit=crop','https://images.unsplash.com/photo-1612539927811-2b18a6c41f5e?q=80&w=1200&auto=format&fit=crop'], pros:['Buona tollerabilità','Rapporto qualità/prezzo','Sacco richiudibile comodo'], cons:['Crocche non adatte a cani molto piccoli','Nessuna variante grain-free','Odore intenso all’apertura'], specs:[['Formato','12 kg'],['Proteine','24%'],['Conservazione','Sacco richiudibile'],['Origine','UE']], longDesc:`Provato su due cani (taglia media): feci regolari e pelo lucido dopo 10 giorni. Non è super premium, ma in promo è un ottimo compromesso. Se il tuo cane è sensibile ai cereali, valuta alternative grain-free.`} },
+  { id:"d3", title:"Siero Viso Acido Ialuronico 60ml", desc:"Texture leggera, ad assorbimento rapido. Ingredienti essenziali, adatto a tutti i tipi di pelle.", rating:4.4, reviews:2300, cat:"bellezza", store:"Amazon", merchant:"amazon", priceNow:12, priceWas:19, discount:37, coupon:null, image:"https://images.unsplash.com/photo-1512496015851-a90fb38ba796?q=80&w=1200&auto=format&fit=crop", history:[19,17,15,13,12], addedAt:"2025-08-08", links:{ amazon:"https://www.amazon.it/dp/B0AAABBBB" , gallery:['https://images.unsplash.com/photo-1512496015851-a90fb38ba796?q=80&w=1200&auto=format&fit=crop','https://images.unsplash.com/photo-1545239351-1141bd82e8a6?q=80&w=1200&auto=format&fit=crop'], pros:['Texture leggera','INCI essenziale','Ottimo sotto il make-up'], cons:['Flacone senza contagocce di qualità','Profumo leggero non per tutti'], specs:[['Contenuto','60 ml'],['Attivo','Acido Ialuronico'],['Profumo','Leggero'],['Pelli','Tutte']], longDesc:`Usato mattina e sera per due settimane: pelle più elastica, senza pilling con la crema solare. Non aspettarti miracoli anti-età: è idratazione onesta a prezzo corretto.`} },
+  { id:"d4", title:"Trapano Avvitatore 18V con Accessori", desc:"Coppia regolabile, luce LED e set punte incluso. Valigetta rigida per riporre tutto.", rating:4.5, reviews:980, cat:"fai_da_te", store:"Leroy Merlin", merchant:"tradedoubler", priceNow:69, priceWas:99, discount:30, coupon:null, image:"https://images.unsplash.com/photo-1504148455329-4ff0802cfb7e?q=80&w=1200&auto=format&fit=crop", history:[99,92,85,79,69], addedAt:"2025-07-30", links:{ tradedoubler:"https://clk.tradedoubler.com/click?p=333&a=444" , gallery:['https://images.unsplash.com/photo-1504148455329-4ff0802cfb7e?q=80&w=1200&auto=format&fit=crop','https://images.unsplash.com/photo-1511207538754-e855bd8f15a5?q=80&w=1200&auto=format&fit=crop'], pros:['Buona coppia per lavori leggeri','Valigetta con accessori','Luce LED utile in spazi stretti'], cons:['Non adatto a muratura impegnativa','Mandrino con lieve gioco','Batteria singola in confezione base'], specs:[['Voltaggio','18 V'],['Modalità','Trapano/Avvitatore'],['Accessori','Sì'],['Luce','LED']], longDesc:`Perfetto per casa: mensole, piccoli montaggi, riparazioni. Per fori importanti nel cemento serve altro. Il LED fa la differenza in armadi e nicchie.`} },
+  { id:"d5", title:"Passeggino Leggero Pieghevole", desc:"Telaio in alluminio, schienale reclinabile e chiusura con una mano. Omologato fino a 15 kg.", rating:4.6, reviews:640, cat:"infanzia", store:"Amazon", merchant:"amazon", priceNow:99, priceWas:159, discount:38, coupon:"BABY10", image:"https://images.unsplash.com/photo-1631049307264-da0ec9d70304?q=80&w=1200&auto=format&fit=crop", history:[159,149,129,119,99], addedAt:"2025-08-04", links:{ amazon:"https://www.amazon.it/dp/B0CCCCCCC" , gallery:['https://images.unsplash.com/photo-1631049307264-da0ec9d70304?q=80&w=1200&auto=format&fit=crop','https://images.unsplash.com/photo-1595433707802-6b2626ef1c86?q=80&w=1200&auto=format&fit=crop'], pros:['Si chiude con una mano','Molto leggero','Tessuti facili da pulire'], cons:['Cesto sottosedile non enorme','Ruote piccole su sanpietrini','Colori limitati'], specs:[['Peso','6.9 kg'],['Omologazione','fino 15 kg'],['Chiusura','One-hand'],['Accessori','Parapioggia']], longDesc:`Provato su marciapiedi e mezzi pubblici: maneggevole e stabile. Non è un fuoristrada, ma per città va benissimo. Seduta comoda, cinture rapide.`} },
+  { id:"d6", title:"Set Pentole Acciaio 10 pz", desc:"Fondo adatto a induzione, manici isolanti e coperchi in vetro. Lavabile in lavastoviglie.", rating:4.5, reviews:620, cat:"casa_cucina", store:"Amazon", merchant:"amazon", priceNow:99, priceWas:149, discount:34, coupon:null, image:"https://images.unsplash.com/photo-1544025162-d76694265947?q=80&w=1200&auto=format&fit=crop", history:[149,139,129,119,99], addedAt:"2025-08-01", links:{ amazon:"https://www.amazon.it/dp/B0DDDDEEEE" , gallery:['https://images.unsplash.com/photo-1544025162-d76694265947?q=80&w=1200&auto=format&fit=crop','https://images.unsplash.com/photo-1485968579580-b6d095142e6e?q=80&w=1200&auto=format&fit=crop'], pros:['Fondo a sandwich per induzione','Coperchi in vetro con sfiato','Impilabili e lavabili'], cons:['Manici che scaldano a fiamma alta','Niente scala interna di misure'], specs:[['Pezzi','10'],['Materiale','Acciaio'],['Lavastoviglie','Sì'],['Compatibilità','Induzione']], longDesc:`Qualità solida per uso quotidiano. Non antiaderenti: serve un filo d’olio in più ma durano nel tempo. In promo diventano un best buy.`} },
+  { id:"d7", title:"Tosaerba Elettrico 1400W", desc:"Larghezza taglio 32 cm, raccolta 30 L, regolazione altezza in 3 posizioni. Perfetto per giardini piccoli.", rating:4.2, reviews:510, cat:"fai_da_te", store:"Amazon", merchant:"amazon", priceNow:119, priceWas:179, discount:34, coupon:null, image:"https://images.unsplash.com/photo-1523419410227-deebaa99fd0f?q=80&w=1200&auto=format&fit=crop", history:[179,169,149,139,119], addedAt:"2025-07-25", links:{ amazon:"https://www.amazon.it/dp/B0FFFFGGGG" , gallery:['https://images.unsplash.com/photo-1523419410227-deebaa99fd0f?q=80&w=1200&auto=format&fit=crop','https://images.unsplash.com/photo-1562599938-7208977f7baf?q=80&w=1200&auto=format&fit=crop'], pros:['Leggero e facile da spingere','Raccolta sufficiente per 200 m²','Regolazione altezza rapida'], cons:['Cavo da gestire (non è a batteria)','Rumore nella media','Scocca non metallica'], specs:[['Potenza','1400 W'],['Larghezza taglio','32 cm'],['Cesto','30 L'],['Terreno','fino 250 m²']], longDesc:`Se hai un giardino piccolo/medio fa il suo, senza spese di batterie. Lame sostituibili facili da trovare. Attenzione a cavi e prolunghe di qualità.`} },
+  { id:"d8", title:"Cuccia Morbida per Gatti L", desc:"Interno in peluche, fondo antiscivolo e cuscino estraibile. Lavabile in lavatrice 30°.", rating:4.5, reviews:880, cat:"animali", store:"Amazon", merchant:"amazon", priceNow:25, priceWas:39, discount:36, coupon:null, image:"https://images.unsplash.com/photo-1518791841217-8f162f1e1131?q=80&w=1200&auto=format&fit=crop", history:[39,35,32,29,25], addedAt:"2025-08-02", links:{ amazon:"https://www.amazon.it/dp/B0HHHHIIII" , gallery:['https://images.unsplash.com/photo-1518791841217-8f162f1e1131?q=80&w=1200&auto=format&fit=crop','https://images.unsplash.com/photo-1573865526739-10659fec78a5?q=80&w=1200&auto=format&fit=crop'], pros:['Morbida e avvolgente','Fondo antiscivolo','Cuscino estraibile'], cons:['Taglia L stretta per gatti XXL','Colore chiaro si sporca facilmente'], specs:[['Taglia','L'],['Lavaggio','30°'],['Fondo','Antiscivolo'],['Uso','Interno']], longDesc:`I gatti ci saltano dentro in pochi minuti (testato con 2 mici redattori). Calda, stabile, zero odore chimico al primo uso.`} }
+];
+const GUIDES=[
+  {id:"g1", title:"Come risparmiare davvero online (senza fregature)", excerpt:"Metodo, non fortuna: budget, preferiti e storico prezzi.", body:`
+    <p>Risparmiare non è questione di “colpo di fortuna”, ma di <b>metodo</b>. La prima regola è stabilire un <b>budget</b> e rispettarlo: quando vedi un -40% è facile lasciarsi prendere, ma se quel prezzo “pieno” non esiste mai, lo sconto non è reale. Per questo su Offerteshock guardiamo lo <b>storico</b> dei prezzi e segnaliamo solo cali che hanno senso.</p>
+    <p>Secondo: usa i <b>Preferiti</b>. Aggiungi i prodotti che ti interessano e lascia che sia il sistema ad avvisarti quando scendono davvero. Terzo: i <b>coupon intelligenti</b>. Alcuni si sommano allo sconto in pagina (stack), altri richiedono login al negozio. Vale sempre la pena provare.</p>
+    <p>Errori comuni? Comprare “perché è in offerta”, rincorrere modelli vecchi solo per il prezzo, sottovalutare i costi di reso. La nostra <b>checklist</b>: 1) ho davvero bisogno di questo? 2) è il <i>prezzo più basso degli ultimi mesi</i>? 3) la qualità è coerente con l’uso che ne farò? Se le risposte sono sì, è un buon affare.</p>`},
+  {id:"g2", title:"Guida pratica all’acquisto su Amazon con affiliazione", excerpt:"Prezzo uguale per te, piccola commissione per noi (trasparente).", body:`
+    <p>Quando clicchi un nostro link affiliato verso Amazon, <b>il prezzo per te non cambia</b>. Se concludi un acquisto idoneo, Amazon riconosce una piccola commissione a Offerteshock: è il modo con cui manteniamo contenuti gratuiti e indipendenti.</p>
+    <p>Noi selezioniamo le offerte con gli stessi criteri che useremmo per noi: niente “spinte” sponsor, niente favoritismi. Se un prodotto non ci convince, lo scriviamo. In pagina trovi sempre <b>pro e contro</b>, alternative e un’indicazione onesta su chi dovrebbe comprarlo e chi no.</p>
+    <p>Consiglio pratico: aggiungi ai Preferiti i modelli che ti interessano e aspetta un calo significativo. Spesso basta <b>qualche giorno</b> per vedere -10/-20% in periodi strategici (fine mese, weekend lunghi, eventi). Comprare bene è una maratona, non uno sprint.</p>`},
+  {id:"g3", title:"Friggitrice ad aria: come scegliere quella giusta", excerpt:"Capienza reale, watt, programmi utili e pulizia.", body:`
+    <p>La domanda numero uno: <b>capienza</b>. Per 1–2 persone bastano 4–5 L; famiglie 3–4 persone meglio 5,5–7 L; oltre, considera i modelli “duo” con doppio cestello. I <b>watt</b> contano per tempi rapidi e doratura uniforme (1.500–1.800 W sono uno sweet spot).</p>
+    <p>Programmi? Meglio pochi ma utili: patatine, pollo, verdure coprono il 90% dei casi. Valuta materiali (cestello antiaderente resistente, parti lavabili in lavastoviglie), <b>rumorosità</b> e ingombro sul piano cucina. Diffida delle promesse miracolose: la differenza reale la fanno uniformità di cottura e facilità di pulizia.</p>
+    <p>Pro tip: se mangi spesso per più persone, il <b>doppio cestello</b> evita “ondate” di cottura e ti fa davvero risparmiare tempo.</p>`},
+  {id:"g4", title:"Cura del prato in 30 minuti a settimana", excerpt:"Routine semplice, attrezzi giusti, stagionalità.", body:`
+    <p>Per un prato in ordine non serve passare i weekend al tagliaerba. Bastano <b>30 minuti</b> a settimana con una routine costante: taglio leggero (mai più di 1/3 dell’altezza), rifinitura dei bordi e controllo rapido di erbacce e zone ingiallite. In estate alza l’altezza di taglio (5–6 cm) per proteggere l’erba dal caldo.</p>
+    <p>Attrezzi minimi: rasaerba affidabile, rifilabordi, rastrello. Se innaffi, fallo al mattino presto 2–3 volte a settimana, evitando ristagni. In primavera valuta un <b>carotaggio</b> leggero per arieggiare e in autunno una concimazione “lenta” per preparare l’inverno.</p>
+    <p>Ricorda: regolarità > intensità. Poco e spesso vince sempre.</p>`},
+  {id:"g5", title:"Beauty routine semplice (3 prodotti, zero sprechi)", excerpt:"Detersione, siero, crema con SPF. Fine.", body:`
+    <p>La miglior routine è quella che <b>riesci a mantenere</b>. Partiamo da tre pilastri: detersione delicata, siero mirato (es. ialuronico per idratazione) e crema con <b>SPF</b> la mattina. Per pelli grasse aggiungi un attivo come niacinamide; per quelle secche scegli texture più ricche. Leggi INCI con buon senso: pochi ingredienti chiari valgono più di buzzword rumorose.</p>
+    <p>Evita di introdurre cinque novità insieme: testa un prodotto per volta e fai un <b>patch test</b> se hai pelle reattiva. Ricorda che costoso non significa sempre migliore: presta attenzione a formulazione, confezione e esperienza d’uso.</p>`},
+  {id:"g6", title:"Passeggino: cosa conta davvero", excerpt:"Peso, chiusura, ruote e certificazioni.", body:`
+    <p>Se vivi in città (scale, mezzi pubblici), il <b>peso</b> e la <b>chiusura con una mano</b> fanno la differenza. Le ruote grandi aiutano su sanpietrini o sterrato leggero; una cappottina profonda con protezione UV è più utile di tanti accessori “gadget”.</p>
+    <p>Valuta <b>reclinazione</b> e compatibilità con navicella/ovetto. Verifica le certificazioni e i limiti di peso, e pensa alla <b>pulizia</b>: rivestimenti sfoderabili ti salvano tempo (e nervi). Accessori da considerare: parapioggia, coprigambe, borsa capiente. Non inseguire il top di gamma: meglio un buon compromesso che userai davvero.</p>`}
+];
+const POSTS=[
+  {id:"p1", title:"Top 10 offerte Casa & Cucina di oggi", date:"2025-08-11", body:`
+    <p>Ogni giorno selezioniamo a mano le offerte “che prenderemmo anche noi”. Niente finti sconti, niente corse al ribasso su prodotti scarsi. Guardiamo lo <b>storico</b> dei prezzi, il rapporto qualità/prezzo e l’utilità nella vita di tutti i giorni. Se un set di pentole ha bordi sottili che deformano, lo scartiamo; se un robot pulisce bene ma si incastra sui tappeti, lo diciamo. La lista cambia spesso: salva tra i <b>Preferiti</b> i prodotti che ti interessano e lascia che sia il prezzo a venire da te.</p>`},
+  {id:"p2", title:"Animali: risparmiare senza rinunciare alla qualità", date:"2025-08-11", body:`
+    <p>Con cani e gatti i soldi volano, ma si può risparmiare con buon senso. Controlla <b>ingredienti</b> e formato: i sacchi grandi costano meno al kg, ma solo se li consumi prima che perdano freschezza. Occhio alle promo ricorrenti su cibo premium: spesso tornano a fine mese. Valuta abbonamenti flessibili (si sospendono quando vuoi) e usa i <b>Preferiti</b> per tracciare il tuo brand preferito: quando scende, ti avvisiamo noi.</p>`},
+  {id:"p3", title:"Bellezza: pochi prodotti, risultati concreti", date:"2025-08-11", body:`
+    <p>La routine perfetta non esiste; esiste quella che funziona per te. Noi puntiamo su pochi prodotti ben formulati: detergente delicato, siero mirato, crema con SPF. Evitiamo pack esagerati e promesse lunaresche. Se un prodotto è ottimo ma caro, suggeriamo <b>alternative equivalenti</b>. E se costa poco ma funziona, lo diciamo a gran voce. L’obiettivo non è riempire il bagno, ma far rendere il budget.</p>`},
+  {id:"p4", title:"Fai da te & Giardino: strumenti che durano", date:"2025-08-11", body:`
+    <p>Comprare male è comprare due volte. Preferiamo attrezzi con <b>ricambi disponibili</b>, assistenza decente e un po’ di sovradimensionamento: un trapano che non si surriscalda e un rasaerba che non si ferma a metà prato sono soldi risparmiati. Nei nostri consigli trovi pro e contro chiari, perché ogni casa e ogni mano sono diverse: meglio scegliere bene che inseguire la promo del giorno.</p>`},
+  {id:"p5", title:"Infanzia: sicurezza e praticità prima di tutto", date:"2025-08-11", body:`
+    <p>Quando si parla di bambini, la priorità è doppia: <b>sicurezza</b> e praticità. Per i passeggini contano ruote, telaio e facilità di chiusura; per seggiolini auto e navicelle informati sempre sulle norme aggiornate e sulle compatibilità con la tua auto. Noi selezioniamo prodotti che semplificano la vita: lavabili, robusti, ben progettati. E se il colore non è quello “di moda”, pazienza: il comfort vince.</p>`}
+];
+
+/* ========= Stato ========= */
+const FAV_KEY='os_fav_v11'; let FAVS=new Set(JSON.parse(localStorage.getItem(FAV_KEY)||'[]'));
+let QUERY=''; let SORT='best'; let CAT='all';
+
+/* ========= Helpers UI ========= */
+function stars(n){ const full=Math.floor(n); const half=(n-full)>=0.5 ? 1 : 0; return '★'.repeat(full)+ (half?'½':'') + '<span style="opacity:.4">'+ '★'.repeat(5-full-half)+'</span>'; }
+function spark(history){
+  const w=260,h=32,p=6,min=Math.min(...history),max=Math.max(...history);
+  const sx=i=>p+(i*(w-2*p)/(history.length-1)), sy=v=>p+(h-2*p)-(((v-min)/(max-min||1))*(h-2*p));
+  let d=""; history.forEach((v,i)=> d+=(i?'L':'M')+sx(i)+' '+sy(v)+' ');
+  const last=history.at(-1), first=history[0], col= last<first?'#22c55e':'#eab308';
+  return `<svg width="${w}" height="${h}" role="img" aria-label="Andamento prezzo"><path d="${d}" fill="none" stroke="${col}" stroke-width="2"/></svg>`;
+}
+function badge(o){
+  if(o.discount>=60) return `<div class="badge errore">⚡ Probabile errore di prezzo</div>`;
+  if(o.discount>=45) return `<div class="badge bomba">🔥 Offerta bomba</div>`;
+  if(o.priceWas && o.priceNow && o.priceNow<o.priceWas) return `<div class="badge">Risparmia ${fmtEur(o.priceWas - o.priceNow)}</div>`;
+  return '';
+}
+function aff(url, merchant, id){
+  const sub = "DEMO_"+id;
+  try{
+    if(merchant==='amazon'){ const u=new URL(url); if(!u.searchParams.get('tag')) u.searchParams.set('tag', AMAZON_TAG); u.searchParams.set('ascsubtag', sub); return u.toString(); }
+    if(merchant==='awin'){ return url + (url.includes('?')?'&':'?') + 'clickref=' + encodeURIComponent(sub); }
+    if(merchant==='tradedoubler'){ return url + (url.includes('?')?'&':'?') + 'epi=' + encodeURIComponent(sub); }
+  }catch(e){}
+  return url;
+}
+function card(o){
+  const fav=FAVS.has(o.id);
+  const url = Object.values(o.links)[0] || '#';
+  return `<article class="card" data-id="${o.id}">
+    ${badge(o)}
+    <button class="fav-btn ${fav?'active':''}" data-fav="${o.id}" aria-pressed="${fav}" aria-label="Aggiungi ai preferiti">❤️</button>
+    <img src="${o.image}" alt="${o.title}">
+    <div class="content">
+      <div class="title">${o.title}</div>${o.desc?`<p class="desc">${o.desc}</p>`:""}
+      <div class="stars">${stars(o.rating)} <span style="opacity:.7">(${o.reviews.toLocaleString('it-IT')})</span></div>
+      <div class="price"><span class="now">${fmtEur(o.priceNow)}</span> <span class="was">${fmtEur(o.priceWas)}</span> <span class="discount">-${o.discount}%</span></div>
+      <div class="tags"><span class="tag">Store: ${o.store}</span><span class="tag">Cat: ${catLabel(o.cat)}</span></div>
+      ${spark(o.history)}
+      <div class="cta">
+        <a class="btn primary" href="${aff(url, o.merchant, o.id)}" target="_blank" rel="nofollow sponsored">Vai all’offerta</a>
+        <button class="btn" data-detail="${o.id}">Dettagli</button>
+      </div>
+      <div class="cta">
+        ${o.coupon?`<span class="coupon-chip">Coupon <code>${o.coupon}</code> <button class="btn btn-copy" data-copy="${o.coupon}">Copia</button><span class="copy-ok">✓ Copiato</span></span>`:''}
+        <button class="btn" data-share="${o.id}">Condividi</button>
+      </div>
+    </div>
+  </article>`;
+}
+
+/* ========= Ordinamento e filtri ========= */
+const cmp = {
+  best: (a,b)=> (b.discount + b.rating/5) - (a.discount + a.rating/5),
+  discount_desc: (a,b)=> b.discount - a.discount,
+  price_asc: (a,b)=> a.priceNow - b.priceNow,
+  price_desc:(a,b)=> b.priceNow - a.priceNow,
+  reviews_desc:(a,b)=> b.reviews - a.reviews,
+  new_desc:(a,b)=> new Date(b.addedAt) - new Date(a.addedAt),
+};
+function filtered(){
+  let res = DEALS.slice();
+  if(CAT!=='all') res = res.filter(o => o.cat===CAT);
+  if(QUERY){ const t=QUERY.toLowerCase(); res = res.filter(o=> o.title.toLowerCase().includes(t)); }
+  res.sort(cmp[SORT] || cmp.best);
+  return res;
+}
+function syncControls(){
+  const sc = qs('#sortCompact'), cat = qs('#catSelect');
+  if(sc) sc.value = SORT;
+  if(cat) cat.value = CAT;
+}
+
+/* ========= Render ========= */
+function render(){
+  const list = filtered();
+  qs('#hero').innerHTML = list.slice(0,2).map(card).join('');
+  qs('#tops').innerHTML = list.slice(2,5).map(card).join('');
+  qs('#grid').innerHTML = list.map(card).join('');
+  qs('#resultsCount').textContent = `${list.length} risultati`;
+  qsa('.fav-btn').forEach(b => { const id=b.dataset.fav; b.classList.toggle('active', FAVS.has(id)); b.setAttribute('aria-pressed', b.classList.contains('active')); });
+  buildTicker(list);
+  syncControls();
+}
+function buildTicker(list){
+  const best = list.slice().sort(cmp.discount_desc).slice(0,8);
+  const items = best.map(o=> `<span class="tick">🔥 <b>-${o.discount}%</b> ${o.title} · <a href="${aff(Object.values(o.links)[0]||'#', o.merchant, o.id)}" target="_blank" rel="nofollow sponsored">Vai</a></span>`).join('');
+  const html = items + items;
+  const track = qs('#tickerTrack');
+  if(track){ track.innerHTML = html; }
+}
+
+/* ========= Interazioni card ========= */
+document.addEventListener('click', (e)=>{
+  const fav = e.target.closest('.fav-btn');
+  if(fav){
+    const id = fav.dataset.fav;
+    if(FAVS.has(id)) FAVS.delete(id); else FAVS.add(id);
+    localStorage.setItem(FAV_KEY, JSON.stringify([...FAVS]));
+    fav.classList.toggle('active'); fav.setAttribute('aria-pressed', fav.classList.contains('active'));
+    qs('#favCount').textContent = FAVS.size;
+    return;
+  }
+  const cp = e.target.closest('[data-copy]');
+  if(cp){
+    const code = cp.getAttribute('data-copy');
+    navigator.clipboard.writeText(code).then(()=>{
+      const ok = cp.parentElement.querySelector('.copy-ok'); if(ok){ ok.classList.add('show'); setTimeout(()=>ok.classList.remove('show'), 1200); }
+    });
+    return;
+  }
+  const det = e.target.closest('[data-detail]');
+  if(det){
+    const o = DEALS.find(x=> x.id===det.getAttribute('data-detail'));
+    if(o) openArticle(`<h3>${o.title}</h3><p>Dettagli sull'offerta (demo)</p>${spark(o.history)}`);
+    return;
+  }
+  const share = e.target.closest('[data-share]');
+  if(share){
+    const o = DEALS.find(x=> x.id===share.getAttribute('data-share'));
+    if(navigator.share){ navigator.share({title:o.title, text:'Guarda questa offerta', url:location.href}).catch(()=>{}); }
+    else { alert('Copia il link dalla barra degli indirizzi.'); }
+    return;
+  }
+});
+
+/* ========= Ricerca + suggerimenti ========= */
+const SKEY='recentSearches_v6';
+function loadRecent(){ return JSON.parse(localStorage.getItem(SKEY) || '[]'); }
+function saveRecent(arr){ localStorage.setItem(SKEY, JSON.stringify(arr.slice(0,8))); }
+function addRecent(term){
+  term = term.trim().toLowerCase();
+  if(!term) return;
+  const list = loadRecent().filter(x=>x!==term);
+  list.unshift(term); saveRecent(list);
+}
+function openSuggest(anchor){
+  const list = loadRecent();
+  const box = getSuggest();
+  if(!list.length){ box.style.display='none'; return; }
+  box.innerHTML = `<div class="head">Ricerche recenti</div>` + list.map(t=>`<div class="sugg-item" data-term="${t}">${t}</div>`).join('');
+  const r = anchor.getBoundingClientRect();
+  box.style.left = Math.max(8, r.left) + 'px';
+  box.style.top  = (r.bottom + 6) + 'px';
+  box.style.width = Math.min(360, Math.max(220, r.width)) + 'px';
+  box.style.display = 'block';
+}
+function closeSuggest(){ getSuggest().style.display='none'; }
+function getSuggest(){ let b=qs('#suggest'); if(!b){ b=document.createElement('div'); b.id='suggest'; b.className='suggest'; document.body.appendChild(b);} return b; }
+function doSearch(term){
+  term = (term||'').trim();
+  if(!term) return;
+  QUERY = term;
+  addRecent(term);
+  closeSuggest();
+  render();
+}
+qs('#q').addEventListener('focus', e=> openSuggest(e.target));
+qs('#q').addEventListener('blur', ()=> setTimeout(closeSuggest, 120));
+qs('#q').addEventListener('keydown', (e)=>{ if(e.key==='Enter'){ e.preventDefault(); doSearch(qs('#q').value); }});
+qs('#btnSearch').addEventListener('click', ()=> doSearch(qs('#q').value));
+document.body.addEventListener('click', (e)=>{
+  const it = e.target.closest('.sugg-item'); if(!it) return;
+  const t = it.getAttribute('data-term'); qs('#q').value = t; doSearch(t);
+});
+
+/* ========= Burger Popover ========= */
+const pop = qs('#popMenu'); const scrim = qs('#popScrim'); const burger = qs('#btnBurger');
+function gutters(){
+  const main = qs('main.container'); const vw = innerWidth;
+  const rect = main ? main.getBoundingClientRect() : {left:12, right: vw-12};
+  return { left: Math.max(0, rect.left), right: Math.max(0, vw - rect.right), vw };
+}
+function placePop(){
+  const r = burger.getBoundingClientRect();
+  const {left:gL, right:gR, vw} = gutters();
+  pop.style.visibility='hidden'; pop.style.display='block';
+  const pw = pop.offsetWidth, ph = pop.offsetHeight;
+  pop.style.visibility='';
+  const vh = innerHeight;
+  const spaceBelow = vh - (r.bottom + 12);
+  const openTop = spaceBelow < ph;
+  const top = openTop ? (r.top - ph - 12) : (r.bottom + 12);
+  const left = gL;
+  pop.style.top = top + 'px'; pop.style.left = left + 'px';
+  pop.style.maxWidth = Math.max(220, vw - gL - gR - 2) + 'px';
+  const ox = (r.left + r.width/2) - left;
+  pop.style.setProperty('--pop-ox', ox + 'px');
+  pop.style.setProperty('--caret-x', (Math.min(pw-18, Math.max(12, ox)) - 6) + 'px');
+  pop.style.setProperty('--caret-top', openTop ? (ph - 6) + 'px' : '-6px');
+}
+function openPop(){ placePop(); scrim.style.display='block'; pop.classList.add('open'); burger.setAttribute('aria-expanded','true'); }
+function closePop(){ pop.classList.remove('open'); setTimeout(()=>{pop.style.display='none'; scrim.style.display='none';}, 220); burger.setAttribute('aria-expanded','false'); }
+burger.addEventListener('click', ()=> pop.classList.contains('open')? closePop(): openPop());
+scrim.addEventListener('click', closePop);
+addEventListener('resize', ()=>{ if(pop.classList.contains('open')) placePop(); }, {passive:true});
+addEventListener('scroll', ()=>{ if(pop.classList.contains('open')) placePop(); }, {passive:true});
+// Handle device rotation: reopen automatically if it was open
+addEventListener('orientationchange', ()=>{
+  try{
+    const wasOpen = pop.classList.contains('open');
+    closePop();
+    pop.style.removeProperty('top'); pop.style.removeProperty('left');
+    if(wasOpen){ setTimeout(()=>{ openPop(); }, 420); }
+  }catch(e){}
+});
+document.addEventListener('visibilitychange', ()=>{ if(document.hidden) closePop(); });
+pop.addEventListener('click', (e)=>{
+  const it = e.target.closest('.pop-item'); if(!it) return;
+  const key = it.getAttribute('data-open');
+  closePop();
+  if(key==='home'){ SORT='best'; CAT='all'; QUERY=''; qs('#q').value=''; render(); return; }
+  if(key==='guides'){ openList('m-guides', GUIDES, true); return; }
+  if(key==='about'){ openModal('m-about'); return; }
+  if(key==='blog'){ openList('m-blog', POSTS, false); return; }
+  if(key==='favs'){ qs('#favToggle').click(); return; }
+  if(key==='settings'){ openModal('m-settings'); return; }
+  if(key==='privacy'){ openModal('m-privacy'); return; }
+  if(key==='cookie'){ openModal('m-cookie'); return; }
+  if(key==='tos'){ openModal('m-tos'); return; }
+  if(key==='contact'){ openModal('m-contact'); return; }
+});
+
+/* ========= Modali + Liste ========= */
+function openModal(id){ qs('#'+id).style.display='flex'; }
+function closeAllModals(){ qsa('.modal').forEach(m=> m.style.display='none'); }
+qsa('[data-close]').forEach(b=> b.addEventListener('click', closeAllModals));
+document.addEventListener('keydown', (e)=>{ if(e.key==='Escape') closeAllModals(); });
+function openArticle(html){ qs('#article').innerHTML = html; openModal('m-article'); }
+function openList(id, items, isGuide){
+  const tgt = qs('#'+id);
+  const grid = tgt.querySelector(isGuide?'#guides':'#blog');
+  grid.innerHTML = items.map(x=>`<article class="card"><img src="https://images.unsplash.com/photo-1542401886-65d6c61db817?q=80&w=1200&auto=format&fit=crop" alt="" style="width:100%;aspect-ratio:16/9;object-fit:cover"><div class="content"><div class="title">${x.title}</div><p style="color:var(--muted)">${isGuide?x.excerpt:('Pubblicato il '+x.date)}</p><div class="cta"><button class="btn" data-read="${x.id}">Leggi</button></div></div></article>`).join('');
+  openModal(id);
+}
+document.body.addEventListener('click', (e)=>{
+  const read = e.target.closest('[data-read]');
+  if(read){
+    const id = read.getAttribute('data-read');
+    const g = GUIDES.find(x=>x.id===id) || POSTS.find(x=>x.id===id);
+    if(g) openArticle(`<h3>${g.title}</h3>${g.body||'<p>...</p>'}`);
+  }
+});
+
+/* ========= Auth demo + preferiti ========= */
+qs('#favToggle').addEventListener('click', ()=>{
+  const favs = DEALS.filter(o=> FAVS.has(o.id));
+  const html = favs.length ? favs.map(o=>`<div class="card"><div class="content"><div class="title">${o.title}</div>${o.desc?`<p class="desc">${o.desc}</p>`:""}<div class="price"><span class="now">${fmtEur(o.priceNow)}</span></div><a class="btn primary" href="${aff(Object.values(o.links)[0]||'#', o.merchant, o.id)}" target="_blank" rel="nofollow sponsored">Vai</a></div></div>`).join('') : "<p>Nessun preferito.</p>";
+  qs('#favs').innerHTML = html; openModal('m-favs');
+});
+qs('#btnLogin').addEventListener('click', ()=> openModal('m-login'));
+qs('#btnRegister').addEventListener('click', ()=> openModal('m-register'));
+qs('#btnLogout').addEventListener('click', ()=> alert('Logout demo'));
+qs('#doLogin').addEventListener('click', ()=>{ alert('Login ok (demo)'); closeAllModals(); });
+qs('#doRegister').addEventListener('click', ()=>{ alert('Registrazione ok (demo)'); closeAllModals(); });
+
+/* ========= Controlli: sort + cat (solo in alto) ========= */
+function setSort(v){ SORT=v; render(); }
+function setCat(v){ CAT=v; render(); }
+(()=>{ const el = qs('#sortCompact'); if(el) el.addEventListener('change', e=> setSort(e.target.value)); })();
+(()=>{ const el = qs('#catSelect'); if(el) el.addEventListener('change', e=> setCat(e.target.value)); })();
+/* ========= Init ========= */
+qs('#favCount').textContent = FAVS.size;
+render();
+
+// Open detailed modal for a deal
+function openDealDetails(dealId){
+  const d = DEALS.find(x=>x.id===dealId);
+  if(!d){ console.warn('Deal not found', dealId); return; }
+  const el = document.getElementById('deal-detail');
+  const stars = '★'.repeat(Math.round(d.rating||0)) + '☆'.repeat(5-Math.round(d.rating||0));
+  const couponBtn = d.coupon ? `<button class="btn ghost" data-copy="${d.coupon}" title="Copia coupon">${d.coupon}</button>` : '';
+  const badgeList = [`${d.merchant?.toUpperCase()||'STORE'}`, d.discount?`-${d.discount}%`:'', d.reviews?`${d.reviews} recensioni`:'' ].filter(Boolean).map(b=>`<span class="badge">${b}</span>`).join('');
+  const thumbs = (d.gallery||[d.image]).map((src,i)=>`<img src="${src}" alt="anteprima ${i+1}" data-main="${src}">`).join('');
+  const specs = (d.specs||[]).map(s=>`<li><span>${s[0]}</span><span>${s[1]}</span></li>`).join('');
+  const pros = (d.pros||[]).map(p=>`<li>✅ ${p}</li>`).join('');
+  const cons = (d.cons||[]).map(c=>`<li>⚠️ ${c}</li>`).join('');
+
+  el.innerHTML = `
+    <div class="deal-head">
+      <div style="flex:1">
+        <h4 class="deal-title">${d.title}</h4>
+        <div class="deal-meta">${stars} <span>·</span> <span>${d.rating?.toFixed?d.rating.toFixed(1):d.rating || 'N.D.'} / 5</span> <span>·</span> <span>${d.reviews||0} recensioni</span></div>
+        <div class="deal-price"><span class="now">€${d.priceNow?.toFixed?d.priceNow.toFixed(2):d.priceNow}</span>${d.priceWas?`<span class="was">€${d.priceWas}</span>`:''}</div>
+        <div class="deal-actions">
+          <a class="btn primary" href="${(d.links&& (d.links.amazon||d.links.awin||d.links.tradedoubler)) || '#'}" target="_blank" rel="nofollow noopener">Vedi su ${d.store||'negozio'}</a>
+          ${couponBtn}
+          <button class="btn ghost" data-fav="${d.id}">❤️ Preferito</button>
+          <button class="btn ghost" data-share="${d.id}">Condividi</button>
+        </div>
+        <div class="badges" style="margin-top:8px">${badgeList}</div>
+      </div>
+    </div>
+
+    <div class="detail-grid">
+      <div class="gallery">
+        <img class="main-img" src="${(d.gallery&&d.gallery[0]) || d.image}" alt="${d.title}" id="detail-main">
+        <div class="thumbs">${thumbs}</div>
+      </div>
+      <div class="specs">
+        <h4>Specifiche essenziali</h4>
+        <ul>${specs || '<li>Dati in aggiornamento</li>'}</ul>
+        <div class="longdesc" style="margin-top:10px">${d.longDesc || d.desc || ''}</div>
+        <div class="pros-cons">
+          <div class="box pros"><h5>Pro</h5><ul>${pros||'<li>-</li>'}</ul></div>
+          <div class="box cons"><h5>Contro</h5><ul>${cons||'<li>-</li>'}</ul></div>
+        </div>
+        <p class="disclosure">Trasparenza: potremmo ricevere una piccola commissione dagli acquisti idonei. Il prezzo per te non cambia.</p>
+      </div>
+    </div>
+  `;
+
+  // Thumbs interaction
+  el.querySelectorAll('.thumbs img').forEach(img=>{
+    img.addEventListener('click', ()=>{
+      const main = el.querySelector('#detail-main');
+      main.src = img.getAttribute('data-main');
+    });
+  });
+
+  // Copy coupon
+  el.querySelectorAll('[data-copy]').forEach(btn=>{
+    btn.addEventListener('click', async ()=>{
+      try{ await navigator.clipboard.writeText(btn.getAttribute('data-copy')); btn.textContent='Copiato!'; setTimeout(()=>btn.textContent=d.coupon, 1600); }catch(e){ alert('Copia non supportata'); }
+    });
+  });
+
+  // Favorite
+  el.querySelectorAll('[data-fav]').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      toggleFavorite(d.id);
+      btn.textContent = isFavorite(d.id) ? '❤️ Nei preferiti' : '❤️ Preferito';
+    });
+  });
+
+  // Share (fallback)
+  el.querySelectorAll('[data-share]').forEach(btn=>{
+    btn.addEventListener('click', async ()=>{
+      const shareData = { title: d.title, text: d.title, url: (d.links&& (d.links.amazon||d.links.awin||d.links.tradedoubler)) || location.href };
+      if(navigator.share){ try{ await navigator.share(shareData); }catch(e){} }
+      else{ await navigator.clipboard.writeText(shareData.url); btn.textContent='Link copiato'; setTimeout(()=>btn.textContent='Condividi',1400); }
+    });
+  });
+
+  openModal('m-deal');
+}
+
+
+// Delegated: open details from cards
+document.addEventListener('click', (e)=>{
+  const btn = e.target.closest('.btn-details');
+  if(btn){ e.preventDefault(); openDealDetails(btn.getAttribute('data-id')); }
+  const imgCard = e.target.closest('.card')?.querySelector('img');
+  // Optionally: click on image opens details
+  if(e.target.tagName==='IMG' && e.target.closest('.card')){
+    const id = e.target.closest('.card').getAttribute('data-id');
+    if(id){ openDealDetails(id); }
+  }
+});
+
+</script>
+<style id="os-spa-subpages-css">
+/* Subpage header (within content area) */
+.os-subheader{
+  position: sticky; top: 0; z-index: 3;
+  background: #0f1117; color: #e8eaed;
+  border-bottom: 1px solid #1f2937;
+  padding: 10px 12px;
+  border-radius: 12px;
+  margin-bottom: 12px;
+}
+.os-subheader .row{ display:flex; align-items:center; justify-content:center; position:relative; gap:12px; flex-wrap:wrap; }
+.os-subheader .brand{ font-weight:900; letter-spacing:.2px; }
+.os-subheader .brand small{ color:#9aa0a6; font-weight:600; margin-left:8px }
+.os-subheader .ticker{ margin-top:8px; overflow:hidden; border:1px solid #1f2937; border-radius:10px; background:#0b1020; }
+.os-subheader .ticker .track{ display:flex; gap:24px; white-space:nowrap; padding:8px 12px; will-change:transform; animation: os-marquee 32s linear infinite; }
+.os-subheader .ticker .item{ display:inline-flex; align-items:center; gap:8px; opacity:.95; }
+.os-subheader .ticker .item b{ font-weight:800 }
+@keyframes os-marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+
+/* Subpage layout helpers */
+.os-subpage{ display:block; }
+.os-subpage .back{ display:inline-flex; gap:8px; align-items:center; border:1px solid #1f2937; background:#10141f; color:#e8eaed; padding:8px 10px; border-radius:10px; text-decoration:none; font-weight:600; }
+.os-subpage .back:hover{ background:#0f172a }
+.os-subpage .spacer{ height:8px }
+
+/* Extra blocks appended to the cloned card */
+.os-subpage .card .pc{ display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:12px }
+@media (max-width:700px){ .os-subpage .card .pc{ grid-template-columns:1fr } }
+.os-subpage .card .box{ border-radius:12px; padding:12px; border:1px solid rgba(255,255,255,.06); background:rgba(255,255,255,.03) }
+.os-subpage .card .box h5{ margin:0 0 8px 0 }
+.os-subpage .card .long{ opacity:.95; margin-top:8px }
+
+/* Ensure images on detail subpage don't trigger anything */
+.os-subpage .card img{ pointer-events:none !important; cursor:default !important; }
+</style>
+<script id="os-automap">
+(function(){
+  const DEBUG = false;
+  const log = (...a)=> DEBUG && console.log('[os-automap]', ...a);
+  function getOffersArray(){
+    const cands=['DEALS','deals','offers','OFFERTE','products','items'];
+    for(const k of cands){ if(Array.isArray(window[k])) return window[k]; }
+    const nested=[['App','state','deals'],['App','state','offers'],['APP','DEALS'],['app','deals']];
+    for(const path of nested){ let cur=window; for(const key of path){ cur=cur?.[key]; } if(Array.isArray(cur)) return cur; }
+    return [];
+  }
+  function normalize(o){
+    const links=o.links||{}; const url=typeof links==='string'?links:(links.amazon||links.awin||links.default||links.url||o.url||'');
+    const gallery=Array.isArray(o.gallery)?o.gallery:(Array.isArray(links.gallery)?links.gallery:[]);
+    const image=o.image||o.img||o.thumbnail||(gallery&&gallery[0])||'';
+    const now=Number(o.priceNow??o.price_now??o.price??o.current_price??o.prezzo??0);
+    const was=Number(o.priceWas??o.price_was??o.was??o.old_price??o.listPrice??o.prezzo_pieno??0);
+    let discount=Number(o.discount??o.sconto??0); if(!discount && now && was) discount=Math.round(100-(now*100/was));
+    return { id:String(o.id??o.sku??o.asin??o.code??''), title:o.title??o.name??'', desc:o.desc??o.subtitle??o.shortDesc??o.short_description??'',
+      rating:Number(o.rating??o.rate??o.stars??0), reviews:Number(o.reviews??o.reviewCount??o.n_reviews??o.ratings??0), cat:o.cat??o.category??'',
+      store:o.store??o.merchant??o.seller??o.brand??'', priceNow:now, priceWas:was, discount, coupon:o.coupon??o.promo??o.couponCode??null,
+      image, url, gallery, specs:o.specs??[], pros:o.pros??[], cons:o.cons??[], history:o.history??[],
+      longDesc:o.longDesc??o.long_description??o.descrizione_completa??o.body??'' };
+  }
+  function toAttr(el,name,value){ if(value==null) return; if(Array.isArray(value)||(typeof value==='object' && value)){ try{ value=JSON.stringify(value);}catch(_){return;} } el.setAttribute(name,String(value)); }
+  function mapCard(card,o){
+    if(card.hasAttribute('data-title')) return;
+    toAttr(card,'data-id',o.id||card.getAttribute('data-id')||''); toAttr(card,'data-title',o.title); toAttr(card,'data-price',o.priceNow); toAttr(card,'data-was',o.priceWas);
+    toAttr(card,'data-discount',o.discount); toAttr(card,'data-store',o.store); toAttr(card,'data-cat',o.cat); toAttr(card,'data-reviews',o.reviews); toAttr(card,'data-rating',o.rating);
+    toAttr(card,'data-image',o.image); toAttr(card,'data-url',o.url); toAttr(card,'data-coupon',o.coupon); toAttr(card,'data-gallery',o.gallery); toAttr(card,'data-specs',o.specs);
+    toAttr(card,'data-pros',o.pros); toAttr(card,'data-cons',o.cons); toAttr(card,'data-history',o.history); toAttr(card,'data-longdesc',o.longDesc);
+    const img=card.querySelector('img'); if(img){ toAttr(img,'data-detail-id',o.id||card.getAttribute('data-id')||''); toAttr(img,'data-title',o.title); toAttr(img,'data-price',o.priceNow);
+      toAttr(img,'data-was',o.priceWas); toAttr(img,'data-discount',o.discount); toAttr(img,'data-store',o.store); toAttr(img,'data-cat',o.cat); toAttr(img,'data-reviews',o.reviews);
+      toAttr(img,'data-rating',o.rating); toAttr(img,'data-image',o.image||img.src); toAttr(img,'data-url',o.url); toAttr(img,'data-coupon',o.coupon); toAttr(img,'data-gallery',o.gallery);
+      toAttr(img,'data-specs',o.specs); toAttr(img,'data-pros',o.pros); toAttr(img,'data-cons',o.cons); toAttr(img,'data-history',o.history); toAttr(img,'data-longdesc',o.longDesc); }
+  }
+  function indexBy(arr,key){ const m=new Map(); arr.forEach(o=>{ const id=String(o[key]||''); if(id) m.set(id,o); }); return m; }
+  function norm(s){ return String(s||'').toLowerCase().replace(/\s+/g,' ').trim(); }
+  function run(){
+    const src=getOffersArray().map(normalize); const byId=indexBy(src,'id'); const byTitle=indexBy(src,'title');
+    document.querySelectorAll('.card').forEach((card,idx)=>{
+      if(card.hasAttribute('data-title')) return;
+      const cid=card.getAttribute('data-id'); const t=(card.querySelector('.title')?.textContent||'').trim(); let obj=null;
+      if(cid && byId.has(cid)) obj=byId.get(cid);
+      else if(t){ const key=norm(t); for(const [title,o] of byTitle.entries()){ if(norm(title)===key){ obj=o; break; } } }
+      if(!obj && src[idx]) obj=src[idx];
+      if(obj) mapCard(card,obj);
+    });
+  }
+  function ready(fn){ if(document.readyState!=='loading') fn(); else document.addEventListener('DOMContentLoaded', fn); }
+  ready(run); new MutationObserver(()=> run()).observe(document.documentElement,{childList:true,subtree:true});
+})();
+</script>
+<script id="os-spa-subpages-js">
+(function(){
+  if(window.__OS_SPA_INIT__) return; window.__OS_SPA_INIT__ = true;
+  const $=(s,r=document)=>r.querySelector(s);
+  const $$=(s,r=document)=>Array.from(r.querySelectorAll(s));
+  const nf=new Intl.NumberFormat('it-IT',{style:'currency',currency:'EUR',maximumFractionDigits:0});
+  if(!window.__OS_BASE_TITLE) window.__OS_BASE_TITLE = document.title;
+
+  function findMount(){
+    const cards = $$('.card');
+    if(!cards.length) return null;
+    let best = null, maxCount = 0;
+    cards.forEach(c=>{
+      let a=c.parentElement;
+      while(a && a!==document.body){
+        const count = a.querySelectorAll ? a.querySelectorAll('.card').length : 0;
+        if(count>=cards.length*0.6 && count>maxCount){ best=a; maxCount=count; }
+        a=a.parentElement;
+      }
+    });
+    return best || cards[0].parentElement;
+  }
+
+  const MOUNT = findMount();
+  if(!MOUNT) return;
+  const HOME_HTML = MOUNT.innerHTML;
+
+  function collectOffers(){
+    const arr = (Array.isArray(window.DEALS)&&window.DEALS)
+             || (Array.isArray(window.deals)&&window.deals)
+             || (Array.isArray(window.offers)&&window.offers)
+             || [];
+    const fromGlobal = arr.map(o=>{
+      const title = o.title || o.name || '';
+      const now   = Number(o.priceNow ?? o.price ?? o.current_price ?? 0);
+      const was   = Number(o.priceWas ?? o.old_price ?? 0);
+      const pct   = o.discount ?? (was && now ? Math.round(100 - (now*100/was)) : 0);
+      const url   = (o.links && (o.links.amazon || o.links.awin || o.links.default)) || o.url || null;
+      return {title, now, was, pct, url};
+    }).filter(x=>x.title);
+    if(fromGlobal.length) return fromGlobal;
+
+    return $$('.card').map(card=>{
+      const title=(card.querySelector('.title')?.textContent||'').trim();
+      const nowTxt=(card.querySelector('.now')?.textContent||'').replace(/[^\d]/g,'');
+      const wasTxt=(card.querySelector('.was')?.textContent||'').replace(/[^\d]/g,'');
+      const now=Number(nowTxt||0), was=Number(wasTxt||0);
+      const pctEl=card.querySelector('.discount'); let pct=0;
+      if(pctEl){ const m=pctEl.textContent.match(/-?(\d+)\s*%/); if(m) pct=Number(m[1]); }
+      const url = card.querySelector('.btn.primary')?.getAttribute('href') || null;
+      return {title, now, was, pct, url};
+    }).filter(x=>x.title);
+  }
+  function buildTicker(items){
+    const part = items.map(it=>{
+      const price = it.now ? nf.format(it.now) : '';
+      the_pct = it.pct ? ` (-${it.pct}%)` : '';
+      const text = `${it.title} — ${price}${the_pct}`.trim();
+      return it.url ? `<a class="item" href="${it.url}" target="_blank" rel="nofollow sponsored">💥 <b>${text}</b></a>`
+                    : `<span class="item">💥 <b>${text}</b></span>`;
+    }).join('');
+    return `<div class="track">${part}${part}</div>`;
+  }
+
+  function getDataForCard(card){
+    const get = (n)=> card.getAttribute(n);
+    const parse = (n)=>{ try{ const v=get(n); return v?JSON.parse(v):null; }catch(_){ return null; } };
+    let data = {
+      id: get('data-id') || card.getAttribute('data-detail-id') || '',
+      title: get('data-title') || (card.querySelector('.title')?.textContent || ''),
+      pros: parse('data-pros') || [],
+      cons: parse('data-cons') || [],
+      longDesc: get('data-longdesc') || ''
+    };
+    if((!data.pros.length || !data.cons.length || !data.longDesc) && (window.DEALS || window.deals || window.offers)){
+      const arr = window.DEALS || window.deals || window.offers;
+      const found = Array.isArray(arr) ? arr.find(x=> String(x.id)===String(data.id) || (x.title && data.title && String(x.title).trim().toLowerCase()===String(data.title).trim().toLowerCase())) : null;
+      if(found){
+        data.pros = data.pros.length ? data.pros : (found.pros||[]);
+        data.cons = data.cons.length ? data.cons : (found.cons||[]);
+        data.longDesc = data.longDesc || found.longDesc || found.description_long || found.desc_long || '';
+      }
+    }
+    return data;
+  }
+
+  function renderHome(replaceState=false){
+    MOUNT.innerHTML = HOME_HTML;
+    
+    document.title = window.__OS_BASE_TITLE || document.title;document.body.classList.remove('os-subpage-open');
+    if(replaceState){ history.replaceState({page:'home'}, '', location.pathname + location.search); }
+  }
+
+  function renderDetailFromCard(card, push=true){
+    const sub = document.createElement('div');
+    sub.className = 'os-subpage';
+
+    const header = document.createElement('div');
+    header.className = 'os-subheader';
+    const titleText = card.getAttribute('data-title') || (card.querySelector('.title')?.textContent || '');
+    header.innerHTML = `<div class="row">
+      <a href="#" class="back" data-os-back>← Torna alla home</a>
+      <div class="brand"><span class="label">Scheda dettaglio:</span> <span class="prod-title"></span></div>
+    </div>`;
+    header.querySelector('.prod-title').textContent = titleText;
+    
+    document.title = `Dettaglio — ${titleText}`;sub.appendChild(header);
+
+    const clone = card.cloneNode(true);
+    clone.querySelectorAll('a,button').forEach(function(el){
+      const txt = (el.textContent||'').trim().toLowerCase();
+      if (txt.startsWith('dettagli') || el.matches('.btn-detail, .open-detail') || el.getAttribute('href')==='#m-deal' || el.getAttribute('data-bs-target')==='#m-deal' || el.getAttribute('data-target')==='#m-deal') {
+        el.remove();
+      }
+    });
+    clone.querySelectorAll('[data-open-detail], [data-detail], [data-detail-id]').forEach(function(el){
+      el.removeAttribute('data-open-detail');
+      el.removeAttribute('data-detail');
+      el.removeAttribute('data-detail-id');
+    });
+    clone.querySelectorAll('a').forEach(function(a){
+      if(a.querySelector('img')){
+        const frag = document.createDocumentFragment();
+        while(a.firstChild){ frag.appendChild(a.firstChild); }
+        a.replaceWith(frag);
+      }
+    });
+    clone.querySelectorAll('img').forEach(function(img){
+      ['onclick','role','tabindex'].forEach(attr=> img.removeAttribute(attr));
+      img.style.pointerEvents='none'; img.style.cursor='default';
+    });
+
+    const target = clone.querySelector('.content') || clone;
+    const data = getDataForCard(card);
+    const prosHTML = (data.pros||[]).map(x=> `<li>✅ ${x}</li>`).join('') || '<li>—</li>';
+    const consHTML = (data.cons||[]).map(x=> `<li>⚠️ ${x}</li>`).join('') || '<li>—</li>';
+    const longHTML = data.longDesc || '';
+    const extra = document.createElement('div');
+    extra.innerHTML = `
+      <div class="pc">
+        <div class="box pro">
+          <h5>Pro</h5>
+          <ul style="margin:0 0 0 18px">${prosHTML}</ul>
+        </div>
+        <div class="box con">
+          <h5>Contro</h5>
+          <ul style="margin:0 0 0 18px">${consHTML}</ul>
+        </div>
+      </div>
+      ${longHTML ? `<p class="long">${longHTML}</p>` : ''}
+    `;
+    target.appendChild(extra);
+
+    sub.appendChild(clone);
+
+    MOUNT.innerHTML = '';
+    MOUNT.appendChild(sub);
+    document.body.classList.add('os-subpage-open');
+
+    sub.querySelector('[data-os-back]').addEventListener('click', (e)=>{
+      e.preventDefault();
+      history.back();
+    });
+
+    if(push){
+      const id = card.getAttribute('data-id') || data?.id || '';
+      const title = (card.querySelector('.title')?.textContent || 'dettaglio');
+      const slug = title.toLowerCase().replace(/\s+/g,'-').replace(/[^a-z0-9\-]/g,'');
+      const url = id ? `#/deal/${encodeURIComponent(id)}-${slug}` : '#/deal';
+      history.pushState({page:'deal', id}, '', url);
+    }
+  }
+
+  function handleRoute(){
+    const hash = location.hash || '';
+    if(hash.startsWith('#/deal/')){
+      const idSlug = hash.split('#/deal/')[1] || '';
+      const id = idSlug.split('-')[0];
+      let card = null;
+      if(id){ card = document.querySelector(`.card[data-id="${CSS.escape(id)}"]`) || document.querySelector(`.card [data-detail-id="${CSS.escape(id)}"]`)?.closest('.card'); }
+      if(card){ renderDetailFromCard(card, false); return; }
+      const first = document.querySelector('.card');
+      if(first){ renderDetailFromCard(first, false); return; }
+      renderHome(true);
+    }else{
+      renderHome(true);
+    }
+  }
+
+  document.addEventListener('click', function(e){
+    if(e.target.closest('.os-subpage')){
+      const isImg = !!e.target.closest('.card img');
+      const btn = e.target.closest('button, a');
+      const isDetails = btn && ((btn.textContent||'').trim().toLowerCase().startsWith('dettagli'));
+      if(isImg || isDetails){ e.preventDefault(); e.stopImmediatePropagation(); return; }
+      return;
+    }
+    const img = e.target.closest('.card img');
+    const btn = e.target.closest('button, a');
+    const isDetails = btn && ((btn.textContent||'').trim().toLowerCase().startsWith('dettagli'));
+    const legacy = e.target.closest('a[href^="#m-deal"], [data-bs-target="#m-deal"], [data-target="#m-deal"]');
+    if(img || isDetails || legacy){
+      e.preventDefault(); e.stopImmediatePropagation();
+      const el = img || btn || legacy;
+      const card = el.closest('.card');
+      if(card) renderDetailFromCard(card, true);
+    }
+  }, true);
+
+  window.addEventListener('popstate', handleRoute);
+  handleRoute();
+})();
+</script>
+<style id="os-detail-center-css">
+.os-subheader .brand{ margin:0 auto; text-align:center; }
+.os-subheader .back{ position:absolute; left:12px; top:50%; transform:translateY(-50%); }
+</style>
+
+<style id="os-header-ticker-css">
+#hInner .ticker-wrap{ margin-top:8px; grid-column:1 / -1; }
+#hInner .ticker{ overflow:hidden; border:1px solid var(--border, #1f2937); border-radius:10px; background:#0b1020; color:#e8eaed; font-size:.95rem; }
+#hInner .ticker-track{ display:flex; gap:24px; white-space:nowrap; padding:8px 12px; will-change:transform; animation: os-marquee 32s linear infinite; }
+#hInner .tick{ display:inline-flex; align-items:center; gap:8px; opacity:.95; }
+#hInner .tick b{ font-weight:800 }
+@keyframes os-marquee { 0%{ transform: translateX(0); } 100%{ transform: translateX(-50%); } }
+</style>
+
+<script id="os-header-ticker-js">
+(function(){
+  if(window.__HEADER_TICKER_INIT__) return; window.__HEADER_TICKER_INIT__=true;
+  const $=(s,r=document)=>r.querySelector(s);
+  const $$=(s,r=document)=>Array.from(r.querySelectorAll(s));
+  const nf=new Intl.NumberFormat('it-IT',{style:'currency',currency:'EUR'});
+
+  function collectOffers(){
+    const arr = (Array.isArray(window.DEALS)&&window.DEALS) || (Array.isArray(window.deals)&&window.deals) || (Array.isArray(window.offers)&&window.offers) || [];
+    const glob = arr.map(o=>{
+      const title = o.title || o.name || '';
+      const now   = Number(o.priceNow ?? o.price ?? o.current_price ?? 0);
+      const was   = Number(o.priceWas ?? o.old_price ?? 0);
+      const pct   = o.discount ?? (was && now ? Math.round(100 - (now*100/was)) : 0);
+      const url   = (o.links && (o.links.amazon || o.links.awin || o.links.default)) || o.url || null;
+      return {title, now, was, pct, url};
+    }).filter(x=>x.title);
+    if(glob.length) return glob;
+
+    return $$('.card').map(card=>{
+      const title=(card.querySelector('.title')?.textContent||'').trim();
+      const nowTxt=(card.querySelector('.now')?.textContent||'').replace(/[^\d]/g,'');
+      const wasTxt=(card.querySelector('.was')?.textContent||'').replace(/[^\d]/g,'');
+      const now=Number(nowTxt||0), was=Number(wasTxt||0);
+      const pctEl=card.querySelector('.discount'); let pct=0;
+      if(pctEl){ const m=pctEl.textContent.match(/-?(\d+)\s*%/); if(m) pct=Number(m[1]); }
+      const url = card.querySelector('.btn.primary')?.getAttribute('href') || null;
+      return {title, now, was, pct, url};
+    }).filter(x=>x.title);
+  }
+
+  function initHeaderTicker(){
+    const hInner = document.querySelector('#hInner') || document.querySelector('header');
+    if(!hInner) return;
+    const search = hInner.querySelector('.search, form[role="search"], .searchbar, #search, input[type="search"]');
+
+    let wrap = hInner.querySelector('#headerTicker');
+    if(!wrap){ wrap = document.createElement('div'); wrap.id='headerTicker'; wrap.className='ticker-wrap'; }
+    if(search && search.parentNode){
+      const parent=search.parentNode;
+      if(wrap.parentNode!==parent || wrap.previousElementSibling!==search){
+        if(search.nextSibling){ parent.insertBefore(wrap, search.nextSibling); }
+        else { parent.appendChild(wrap); }
+      }
+    } else {
+      if(wrap.parentNode!==hInner) hInner.appendChild(wrap);
+    }
+    let inner = wrap.querySelector('.ticker'); if(!inner){ inner=document.createElement('div'); inner.className='ticker'; wrap.appendChild(inner); }
+    let track = wrap.querySelector('#tickerTrack'); if(!track){ track=document.createElement('div'); track.id='tickerTrack'; track.className='ticker-track'; inner.appendChild(track); }
+
+    const items = collectOffers();
+    const html = items.map(it=>{
+      const price = it.now ? nf.format(it.now) : '';
+      const pct = it.pct ? ` (-${it.pct}%)` : '';
+      const text = `${it.title} — ${price}${pct}`.trim();
+      const href = it.url || '#';
+      return `<a class="tick" href="${href}" target="_blank" rel="nofollow sponsored">💥 <b>${text}</b></a>`;
+    }).join('');
+
+    track.innerHTML = html || '<span class="tick"><b>Offerteshock</b> — offerte in aggiornamento…</span>';
+  }
+
+  if(document.readyState!=='loading') initHeaderTicker();
+  else document.addEventListener('DOMContentLoaded', initHeaderTicker);
+  window.addEventListener('load', initHeaderTicker);
+})();
+</script>
+
+<script>
+/* === JS patch (v4) === */
+(function(){
+  // Lazy/async for card() images (if exists)
+  try{
+    const _orig = window.card;
+    window.card = function(o){
+      try{ return _orig(o).replace('<img ', '<img loading="lazy" decoding="async" '); }
+      catch(e){ return _orig(o); }
+    }
+  }catch(e){}
+  // Reduced motion
+  try{
+    const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const root = document.documentElement;
+    function apply(){ root.style.setProperty('--motion-ok', mq.matches ? '0' : '1'); }
+    (mq.addEventListener? mq.addEventListener('change', apply) : mq.addListener(apply)); apply();
+  }catch(e){}
+  // Share fallback
+  document.addEventListener('click', async (ev)=>{
+    const t = ev.target.closest('[data-share]'); if(!t) return;
+    ev.preventDefault();
+    const data = { title: document.title, url: location.href };
+    try{
+      if(navigator.share) await navigator.share(data);
+      else{ await navigator.clipboard.writeText(location.href); t.textContent='Link copiato!'; setTimeout(()=>t.textContent='Condividi',1800); }
+    }catch(e){ console.debug(e); }
+  }, {passive:false});
+  // Popover/burger a11y
+  try{
+    const pop = document.getElementById('popMenu');
+    const scrim = document.getElementById('popScrim');
+    const btn = document.getElementById('btnBurger');
+    function closePop(){
+      pop?.classList.remove('open');
+      if(scrim) scrim.style.display = 'none';
+      btn?.setAttribute('aria-expanded','false');
+      btn?.focus();
+    }
+    document.addEventListener('keydown', e=>{ if(e.key==='Escape' && pop?.classList.contains('open')) closePop(); });
+    pop?.addEventListener('click', e=>{ if(e.target.closest('.pop-item')) closePop(); });
+  }catch(e){}
+})();
+
+</script>
+</body>
+</html>

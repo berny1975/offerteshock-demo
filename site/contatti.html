@@ -1,22 +1,23 @@
-<!doctype html>
-<html lang="it">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Contatti • Offerteshock.it — Offerte, Guide, Blog e Coupon (SPA singolo file)</title>
-<link rel="icon" href="./assets/favicon.ico">
-<link rel="stylesheet" href="./assets/styles.css">
-<meta name="description" content="Contatta il team di Offerteshock.it — Offerte, Guide, Blog e Coupon (SPA singolo file).">
-</head>
-<body>
-<header style="padding:12px"><a href="./" aria-label="Torna alla Home">&larr; Home</a></header>
-<main class="container" style="max-width:min(1100px,95%);margin:20px auto">
-  <h1>Contatti</h1>
-  <ul>
-    <li>Email: <a href="./contatti.html">contatti@example.com</a></li>
-    <li>Privacy: <a href="./privacy.html">privacy@example.com</a></li>
-  </ul>
-  <p><em>Nota:</em> per form su sito statico usa servizi esterni (Formspree/Netlify Forms).</p>
-</main>
-</body>
-</html>
+<!doctype html><html lang="it"><head>
+<meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<meta name="theme-color" content="#0b0e13"/><title>Contatti · OfferteShock</title>
+<link rel="stylesheet" href="./assets/styles.css"/></head><body>
+<div class="wrap">
+  <div class="card">
+    <h1>Contattaci</h1>
+    <p>Per richieste o esercizio dei diritti privacy, scrivici.</p>
+    <form action="mailto:info@tuodominio.it" method="post" enctype="text/plain" onsubmit="alert('Si aprirà il tuo client email per inviare la richiesta.');">
+      <div style="display:grid;gap:12px;max-width:520px">
+        <input required placeholder="Il tuo nome" name="nome" style="padding:12px;border-radius:10px;border:1px solid rgba(255,255,255,.15);background:#0f1320;color:#e7edf3">
+        <input required type="email" placeholder="La tua email" name="email" style="padding:12px;border-radius:10px;border:1px solid rgba(255,255,255,.15);background:#0f1320;color:#e7edf3">
+        <textarea required rows="5" placeholder="Messaggio" name="messaggio" style="padding:12px;border-radius:10px;border:1px solid rgba(255,255,255,.15);background:#0f1320;color:#e7edf3"></textarea>
+        <button class="btn" type="submit">Invia</button>
+      </div>
+    </form>
+    <p style="color:#aab4c3;margin-top:12px">Sostituisci <code>info@tuodominio.it</code> con la tua email o integra un servizio form esterno.</p>
+    <p><a class="btn" href="./index.html">Torna alla home</a></p>
+  </div>
+  <footer>© <span id="y"></span> OfferteShock · <a href="./privacy.html">Privacy</a> · <a href="./termini.html">Termini</a></footer>
+</div>
+<script>document.getElementById('y').textContent=new Date().getFullYear()</script>
+</body></html>

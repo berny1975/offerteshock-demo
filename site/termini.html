@@ -2,6 +2,60 @@
 <meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
 <meta name="theme-color" content="#0b0e13"/><title>Termini · OfferteShock</title>
 <link rel="stylesheet" href="./assets/styles.css"/></head><body>
+<header class="fullbleed">
+<div class="h-inner" id="hInner">
+<div class="brand">
+<button aria-label="Menu" class="burger" id="btnBurger" title="Menu">☰</button>
+<a href="index.html" class="home-link"><svg fill="none" viewbox="0 0 24 24"><path d="M4 7.5C4 6.12 5.12 5 6.5 5h3A2.5 2.5 0 0 1 12 7.5v9A2.5 2.5 0 0 1 9.5 19h-3A2.5 2.5 0 0 1 4 16.5v-9Z" fill="#22c55e"></path><path d="M12 7.5C12 6.12 13.12 5 14.5 5h3A2.5 2.5 0 0 1 20 7.5v1A2.5 2.5 0 0 1 17.5 11h-3A2.5 2.5 0 0 1 12 8.5v-1Z" fill="#3b82f6"></path></svg>
+<span>Offerteshock.it</span></a>
+</div>
+<div id="authDock">
+<div class="fav-pill" id="favToggle" title="Preferiti">❤️ <span class="count" id="favCount">0</span></div>
+<button class="btn xs" id="btnLogin">Login</button>
+<button class="btn primary xs" id="btnRegister">Registrati</button>
+<button class="btn xs" id="btnLogout" style="display:none">Logout</button>
+</div>
+<div class="search" role="search">
+<div class="ctrl cat">
+<span class="label" id="labCat">Categorie:</span>
+<span class="select small"><select aria-labelledby="labCat" id="catSelect">
+<option value="all">Tutte</option>
+<option value="casa_cucina">Casa e Cucina</option>
+<option value="animali">Prodotti per Animali</option>
+<option value="bellezza">Bellezza &amp; Cura Persona</option>
+<option value="fai_da_te">Fai da Te e Giardinaggio</option>
+<option value="infanzia">Prodotti per l'Infanzia</option>
+</select></span>
+</div>
+<div class="searchbar">
+<input aria-label="Cerca" autocomplete="off" class="search-in" id="q" placeholder="Cerca brand, modello, categoria…" type="search"/>
+<button aria-label="Esegui ricerca" class="btn ghost btn-search" id="btnSearch">Cerca</button>
+</div>
+
+</div>
+</div>
+</header>
+<div aria-hidden="true" class="pop-scrim" id="popScrim"></div>
+<div aria-hidden="true" class="pop" id="popMenu" role="menu">
+<nav class="pop-nav">
+<a class="pop-item" href="index.html">Home</a>
+<a class="pop-item" href="about.html">Chi Siamo</a>
+<a class="pop-item" href="guides.html">Guide</a>
+<a class="pop-item" href="blog.html">Blog</a>
+<a class="pop-item" href="favs.html">Preferiti</a>
+<a class="pop-item" href="settings.html">Impostazioni</a>
+<a class="pop-item" href="privacy.html">Privacy</a>
+<a class="pop-item" href="cookie.html">Cookie</a>
+<a class="pop-item" href="termini.html">Termini</a>
+<a class="pop-item" href="contatti.html">Contatti</a>
+</nav>
+</div>
+
+
+
+
+<main class="container">
+
 <div class="wrap">
   <div class="card">
     <h1>Termini e Condizioni d'Uso</h1>
@@ -17,5 +71,581 @@
   </div>
   <footer>© <span id="y"></span> OfferteShock · <a href="./privacy.html">Privacy</a> · <a href="./contatti.html">Contatti</a></footer>
 </div>
-<script>document.getElementById('y').textContent=new Date().getFullYear()</script>
+
+<script>
+
+/* ========= Utils ========= */
+const qs = s => document.querySelector(s);
+const qsa = s => [...document.querySelectorAll(s)];
+const ce = (t,cls) => Object.assign(document.createElement(t), cls?{className:cls}:{});
+const fmtEur = n => new Intl.NumberFormat('it-IT',{style:'currency',currency:'EUR',maximumFractionDigits:0}).format(n);
+
+/* ========= Categorie ========= */
+const CAT_LABELS = {
+  all: "Tutte",
+  casa_cucina: "Casa e Cucina",
+  animali: "Prodotti per Animali",
+  bellezza: "Bellezza & Cura Persona",
+  fai_da_te: "Fai da Te e Giardinaggio",
+  infanzia: "Prodotti per l'Infanzia"
+};
+const catLabel = k => CAT_LABELS[k] || k;
+
+/* ========= Demo data ========= */
+const AMAZON_TAG="YOUR_TAG-21";
+const DEALS=[
+  { id:"d1", title:"Friggitrice ad Aria 5.5L", desc:"Cestello antiaderente, 8 programmi, facile da pulire. Ideale per porzioni familiari con minore olio.", rating:4.6, reviews:3560, cat:"casa_cucina", store:"Amazon", merchant:"amazon", priceNow:89, priceWas:139, discount:36, coupon:"AIR10", image:"https://images.unsplash.com/photo-1606756790138-261c7d3113b9?q=80&w=1200&auto=format&fit=crop", history:[139,129,119,99,89], addedAt:"2025-08-05", links:{ amazon:"https://www.amazon.it/dp/B08XYZXYZ" , gallery:['https://images.unsplash.com/photo-1606756790138-261c7d3113b9?q=80&w=1200&auto=format&fit=crop','https://images.unsplash.com/photo-1546069901-ba9599a7e63c?q=80&w=1200&auto=format&fit=crop','https://images.unsplash.com/photo-1543352634-8730a9b43ae4?q=80&w=1200&auto=format&fit=crop'], pros:['Cuoce in modo uniforme','Cestello grande per famiglia','Facile da pulire','Programmi essenziali, non troppi'], cons:['Ingombro sul piano cucina','Nessuna app/ricette integrate','Rumore ventola udibile a piena potenza'], specs:[['Capienza','5.5 L'],['Potenza','1700 W'],['Lavastoviglie','Cestello sì'],['Programmi','8'],['Garanzia','2 anni']], longDesc:`Abbiamo cucinato patate, pollo e verdure per più giorni: la resa è stata costante, con doratura uniforme senza odori forti. Non è un modello “smart”: per molti è un pro (meno complessità), per chi vuole app/appunti è un contro. Dopo 2 settimane di uso, il rivestimento è ancora perfetto. Consigliata a chi vuole qualità senza spendere troppo.`} },
+  { id:"d2", title:"Cibo Secco Premium per Cani 12kg", desc:"Ricco di proteine con ingredienti dichiarati, senza coloranti. Sacco richiudibile anti-odore.", rating:4.7, reviews:1420, cat:"animali", store:"Zooplus", merchant:"awin", priceNow:39, priceWas:59, discount:34, coupon:"DOG5", image:"https://images.unsplash.com/photo-1548199973-03cce0bbc87b?q=80&w=1200&auto=format&fit=crop", history:[59,55,49,45,39], addedAt:"2025-08-06", links:{ awin:"https://www.awin1.com/cread.php?awinmid=222&awinaffid=333" , gallery:['https://images.unsplash.com/photo-1548199973-03cce0bbc87b?q=80&w=1200&auto=format&fit=crop','https://images.unsplash.com/photo-1612539927811-2b18a6c41f5e?q=80&w=1200&auto=format&fit=crop'], pros:['Buona tollerabilità','Rapporto qualità/prezzo','Sacco richiudibile comodo'], cons:['Crocche non adatte a cani molto piccoli','Nessuna variante grain-free','Odore intenso all’apertura'], specs:[['Formato','12 kg'],['Proteine','24%'],['Conservazione','Sacco richiudibile'],['Origine','UE']], longDesc:`Provato su due cani (taglia media): feci regolari e pelo lucido dopo 10 giorni. Non è super premium, ma in promo è un ottimo compromesso. Se il tuo cane è sensibile ai cereali, valuta alternative grain-free.`} },
+  { id:"d3", title:"Siero Viso Acido Ialuronico 60ml", desc:"Texture leggera, ad assorbimento rapido. Ingredienti essenziali, adatto a tutti i tipi di pelle.", rating:4.4, reviews:2300, cat:"bellezza", store:"Amazon", merchant:"amazon", priceNow:12, priceWas:19, discount:37, coupon:null, image:"https://images.unsplash.com/photo-1512496015851-a90fb38ba796?q=80&w=1200&auto=format&fit=crop", history:[19,17,15,13,12], addedAt:"2025-08-08", links:{ amazon:"https://www.amazon.it/dp/B0AAABBBB" , gallery:['https://images.unsplash.com/photo-1512496015851-a90fb38ba796?q=80&w=1200&auto=format&fit=crop','https://images.unsplash.com/photo-1545239351-1141bd82e8a6?q=80&w=1200&auto=format&fit=crop'], pros:['Texture leggera','INCI essenziale','Ottimo sotto il make-up'], cons:['Flacone senza contagocce di qualità','Profumo leggero non per tutti'], specs:[['Contenuto','60 ml'],['Attivo','Acido Ialuronico'],['Profumo','Leggero'],['Pelli','Tutte']], longDesc:`Usato mattina e sera per due settimane: pelle più elastica, senza pilling con la crema solare. Non aspettarti miracoli anti-età: è idratazione onesta a prezzo corretto.`} },
+  { id:"d4", title:"Trapano Avvitatore 18V con Accessori", desc:"Coppia regolabile, luce LED e set punte incluso. Valigetta rigida per riporre tutto.", rating:4.5, reviews:980, cat:"fai_da_te", store:"Leroy Merlin", merchant:"tradedoubler", priceNow:69, priceWas:99, discount:30, coupon:null, image:"https://images.unsplash.com/photo-1504148455329-4ff0802cfb7e?q=80&w=1200&auto=format&fit=crop", history:[99,92,85,79,69], addedAt:"2025-07-30", links:{ tradedoubler:"https://clk.tradedoubler.com/click?p=333&a=444" , gallery:['https://images.unsplash.com/photo-1504148455329-4ff0802cfb7e?q=80&w=1200&auto=format&fit=crop','https://images.unsplash.com/photo-1511207538754-e855bd8f15a5?q=80&w=1200&auto=format&fit=crop'], pros:['Buona coppia per lavori leggeri','Valigetta con accessori','Luce LED utile in spazi stretti'], cons:['Non adatto a muratura impegnativa','Mandrino con lieve gioco','Batteria singola in confezione base'], specs:[['Voltaggio','18 V'],['Modalità','Trapano/Avvitatore'],['Accessori','Sì'],['Luce','LED']], longDesc:`Perfetto per casa: mensole, piccoli montaggi, riparazioni. Per fori importanti nel cemento serve altro. Il LED fa la differenza in armadi e nicchie.`} },
+  { id:"d5", title:"Passeggino Leggero Pieghevole", desc:"Telaio in alluminio, schienale reclinabile e chiusura con una mano. Omologato fino a 15 kg.", rating:4.6, reviews:640, cat:"infanzia", store:"Amazon", merchant:"amazon", priceNow:99, priceWas:159, discount:38, coupon:"BABY10", image:"https://images.unsplash.com/photo-1631049307264-da0ec9d70304?q=80&w=1200&auto=format&fit=crop", history:[159,149,129,119,99], addedAt:"2025-08-04", links:{ amazon:"https://www.amazon.it/dp/B0CCCCCCC" , gallery:['https://images.unsplash.com/photo-1631049307264-da0ec9d70304?q=80&w=1200&auto=format&fit=crop','https://images.unsplash.com/photo-1595433707802-6b2626ef1c86?q=80&w=1200&auto=format&fit=crop'], pros:['Si chiude con una mano','Molto leggero','Tessuti facili da pulire'], cons:['Cesto sottosedile non enorme','Ruote piccole su sanpietrini','Colori limitati'], specs:[['Peso','6.9 kg'],['Omologazione','fino 15 kg'],['Chiusura','One-hand'],['Accessori','Parapioggia']], longDesc:`Provato su marciapiedi e mezzi pubblici: maneggevole e stabile. Non è un fuoristrada, ma per città va benissimo. Seduta comoda, cinture rapide.`} },
+  { id:"d6", title:"Set Pentole Acciaio 10 pz", desc:"Fondo adatto a induzione, manici isolanti e coperchi in vetro. Lavabile in lavastoviglie.", rating:4.5, reviews:620, cat:"casa_cucina", store:"Amazon", merchant:"amazon", priceNow:99, priceWas:149, discount:34, coupon:null, image:"https://images.unsplash.com/photo-1544025162-d76694265947?q=80&w=1200&auto=format&fit=crop", history:[149,139,129,119,99], addedAt:"2025-08-01", links:{ amazon:"https://www.amazon.it/dp/B0DDDDEEEE" , gallery:['https://images.unsplash.com/photo-1544025162-d76694265947?q=80&w=1200&auto=format&fit=crop','https://images.unsplash.com/photo-1485968579580-b6d095142e6e?q=80&w=1200&auto=format&fit=crop'], pros:['Fondo a sandwich per induzione','Coperchi in vetro con sfiato','Impilabili e lavabili'], cons:['Manici che scaldano a fiamma alta','Niente scala interna di misure'], specs:[['Pezzi','10'],['Materiale','Acciaio'],['Lavastoviglie','Sì'],['Compatibilità','Induzione']], longDesc:`Qualità solida per uso quotidiano. Non antiaderenti: serve un filo d’olio in più ma durano nel tempo. In promo diventano un best buy.`} },
+  { id:"d7", title:"Tosaerba Elettrico 1400W", desc:"Larghezza taglio 32 cm, raccolta 30 L, regolazione altezza in 3 posizioni. Perfetto per giardini piccoli.", rating:4.2, reviews:510, cat:"fai_da_te", store:"Amazon", merchant:"amazon", priceNow:119, priceWas:179, discount:34, coupon:null, image:"https://images.unsplash.com/photo-1523419410227-deebaa99fd0f?q=80&w=1200&auto=format&fit=crop", history:[179,169,149,139,119], addedAt:"2025-07-25", links:{ amazon:"https://www.amazon.it/dp/B0FFFFGGGG" , gallery:['https://images.unsplash.com/photo-1523419410227-deebaa99fd0f?q=80&w=1200&auto=format&fit=crop','https://images.unsplash.com/photo-1562599938-7208977f7baf?q=80&w=1200&auto=format&fit=crop'], pros:['Leggero e facile da spingere','Raccolta sufficiente per 200 m²','Regolazione altezza rapida'], cons:['Cavo da gestire (non è a batteria)','Rumore nella media','Scocca non metallica'], specs:[['Potenza','1400 W'],['Larghezza taglio','32 cm'],['Cesto','30 L'],['Terreno','fino 250 m²']], longDesc:`Se hai un giardino piccolo/medio fa il suo, senza spese di batterie. Lame sostituibili facili da trovare. Attenzione a cavi e prolunghe di qualità.`} },
+  { id:"d8", title:"Cuccia Morbida per Gatti L", desc:"Interno in peluche, fondo antiscivolo e cuscino estraibile. Lavabile in lavatrice 30°.", rating:4.5, reviews:880, cat:"animali", store:"Amazon", merchant:"amazon", priceNow:25, priceWas:39, discount:36, coupon:null, image:"https://images.unsplash.com/photo-1518791841217-8f162f1e1131?q=80&w=1200&auto=format&fit=crop", history:[39,35,32,29,25], addedAt:"2025-08-02", links:{ amazon:"https://www.amazon.it/dp/B0HHHHIIII" , gallery:['https://images.unsplash.com/photo-1518791841217-8f162f1e1131?q=80&w=1200&auto=format&fit=crop','https://images.unsplash.com/photo-1573865526739-10659fec78a5?q=80&w=1200&auto=format&fit=crop'], pros:['Morbida e avvolgente','Fondo antiscivolo','Cuscino estraibile'], cons:['Taglia L stretta per gatti XXL','Colore chiaro si sporca facilmente'], specs:[['Taglia','L'],['Lavaggio','30°'],['Fondo','Antiscivolo'],['Uso','Interno']], longDesc:`I gatti ci saltano dentro in pochi minuti (testato con 2 mici redattori). Calda, stabile, zero odore chimico al primo uso.`} }
+];
+const GUIDES=[
+  {id:"g1", title:"Come risparmiare davvero online (senza fregature)", excerpt:"Metodo, non fortuna: budget, preferiti e storico prezzi.", body:`
+    <p>Risparmiare non è questione di “colpo di fortuna”, ma di <b>metodo</b>. La prima regola è stabilire un <b>budget</b> e rispettarlo: quando vedi un -40% è facile lasciarsi prendere, ma se quel prezzo “pieno” non esiste mai, lo sconto non è reale. Per questo su Offerteshock guardiamo lo <b>storico</b> dei prezzi e segnaliamo solo cali che hanno senso.</p>
+    <p>Secondo: usa i <b>Preferiti</b>. Aggiungi i prodotti che ti interessano e lascia che sia il sistema ad avvisarti quando scendono davvero. Terzo: i <b>coupon intelligenti</b>. Alcuni si sommano allo sconto in pagina (stack), altri richiedono login al negozio. Vale sempre la pena provare.</p>
+    <p>Errori comuni? Comprare “perché è in offerta”, rincorrere modelli vecchi solo per il prezzo, sottovalutare i costi di reso. La nostra <b>checklist</b>: 1) ho davvero bisogno di questo? 2) è il <i>prezzo più basso degli ultimi mesi</i>? 3) la qualità è coerente con l’uso che ne farò? Se le risposte sono sì, è un buon affare.</p>`},
+  {id:"g2", title:"Guida pratica all’acquisto su Amazon con affiliazione", excerpt:"Prezzo uguale per te, piccola commissione per noi (trasparente).", body:`
+    <p>Quando clicchi un nostro link affiliato verso Amazon, <b>il prezzo per te non cambia</b>. Se concludi un acquisto idoneo, Amazon riconosce una piccola commissione a Offerteshock: è il modo con cui manteniamo contenuti gratuiti e indipendenti.</p>
+    <p>Noi selezioniamo le offerte con gli stessi criteri che useremmo per noi: niente “spinte” sponsor, niente favoritismi. Se un prodotto non ci convince, lo scriviamo. In pagina trovi sempre <b>pro e contro</b>, alternative e un’indicazione onesta su chi dovrebbe comprarlo e chi no.</p>
+    <p>Consiglio pratico: aggiungi ai Preferiti i modelli che ti interessano e aspetta un calo significativo. Spesso basta <b>qualche giorno</b> per vedere -10/-20% in periodi strategici (fine mese, weekend lunghi, eventi). Comprare bene è una maratona, non uno sprint.</p>`},
+  {id:"g3", title:"Friggitrice ad aria: come scegliere quella giusta", excerpt:"Capienza reale, watt, programmi utili e pulizia.", body:`
+    <p>La domanda numero uno: <b>capienza</b>. Per 1–2 persone bastano 4–5 L; famiglie 3–4 persone meglio 5,5–7 L; oltre, considera i modelli “duo” con doppio cestello. I <b>watt</b> contano per tempi rapidi e doratura uniforme (1.500–1.800 W sono uno sweet spot).</p>
+    <p>Programmi? Meglio pochi ma utili: patatine, pollo, verdure coprono il 90% dei casi. Valuta materiali (cestello antiaderente resistente, parti lavabili in lavastoviglie), <b>rumorosità</b> e ingombro sul piano cucina. Diffida delle promesse miracolose: la differenza reale la fanno uniformità di cottura e facilità di pulizia.</p>
+    <p>Pro tip: se mangi spesso per più persone, il <b>doppio cestello</b> evita “ondate” di cottura e ti fa davvero risparmiare tempo.</p>`},
+  {id:"g4", title:"Cura del prato in 30 minuti a settimana", excerpt:"Routine semplice, attrezzi giusti, stagionalità.", body:`
+    <p>Per un prato in ordine non serve passare i weekend al tagliaerba. Bastano <b>30 minuti</b> a settimana con una routine costante: taglio leggero (mai più di 1/3 dell’altezza), rifinitura dei bordi e controllo rapido di erbacce e zone ingiallite. In estate alza l’altezza di taglio (5–6 cm) per proteggere l’erba dal caldo.</p>
+    <p>Attrezzi minimi: rasaerba affidabile, rifilabordi, rastrello. Se innaffi, fallo al mattino presto 2–3 volte a settimana, evitando ristagni. In primavera valuta un <b>carotaggio</b> leggero per arieggiare e in autunno una concimazione “lenta” per preparare l’inverno.</p>
+    <p>Ricorda: regolarità > intensità. Poco e spesso vince sempre.</p>`},
+  {id:"g5", title:"Beauty routine semplice (3 prodotti, zero sprechi)", excerpt:"Detersione, siero, crema con SPF. Fine.", body:`
+    <p>La miglior routine è quella che <b>riesci a mantenere</b>. Partiamo da tre pilastri: detersione delicata, siero mirato (es. ialuronico per idratazione) e crema con <b>SPF</b> la mattina. Per pelli grasse aggiungi un attivo come niacinamide; per quelle secche scegli texture più ricche. Leggi INCI con buon senso: pochi ingredienti chiari valgono più di buzzword rumorose.</p>
+    <p>Evita di introdurre cinque novità insieme: testa un prodotto per volta e fai un <b>patch test</b> se hai pelle reattiva. Ricorda che costoso non significa sempre migliore: presta attenzione a formulazione, confezione e esperienza d’uso.</p>`},
+  {id:"g6", title:"Passeggino: cosa conta davvero", excerpt:"Peso, chiusura, ruote e certificazioni.", body:`
+    <p>Se vivi in città (scale, mezzi pubblici), il <b>peso</b> e la <b>chiusura con una mano</b> fanno la differenza. Le ruote grandi aiutano su sanpietrini o sterrato leggero; una cappottina profonda con protezione UV è più utile di tanti accessori “gadget”.</p>
+    <p>Valuta <b>reclinazione</b> e compatibilità con navicella/ovetto. Verifica le certificazioni e i limiti di peso, e pensa alla <b>pulizia</b>: rivestimenti sfoderabili ti salvano tempo (e nervi). Accessori da considerare: parapioggia, coprigambe, borsa capiente. Non inseguire il top di gamma: meglio un buon compromesso che userai davvero.</p>`}
+];
+const POSTS=[
+  {id:"p1", title:"Top 10 offerte Casa & Cucina di oggi", date:"2025-08-11", body:`
+    <p>Ogni giorno selezioniamo a mano le offerte “che prenderemmo anche noi”. Niente finti sconti, niente corse al ribasso su prodotti scarsi. Guardiamo lo <b>storico</b> dei prezzi, il rapporto qualità/prezzo e l’utilità nella vita di tutti i giorni. Se un set di pentole ha bordi sottili che deformano, lo scartiamo; se un robot pulisce bene ma si incastra sui tappeti, lo diciamo. La lista cambia spesso: salva tra i <b>Preferiti</b> i prodotti che ti interessano e lascia che sia il prezzo a venire da te.</p>`},
+  {id:"p2", title:"Animali: risparmiare senza rinunciare alla qualità", date:"2025-08-11", body:`
+    <p>Con cani e gatti i soldi volano, ma si può risparmiare con buon senso. Controlla <b>ingredienti</b> e formato: i sacchi grandi costano meno al kg, ma solo se li consumi prima che perdano freschezza. Occhio alle promo ricorrenti su cibo premium: spesso tornano a fine mese. Valuta abbonamenti flessibili (si sospendono quando vuoi) e usa i <b>Preferiti</b> per tracciare il tuo brand preferito: quando scende, ti avvisiamo noi.</p>`},
+  {id:"p3", title:"Bellezza: pochi prodotti, risultati concreti", date:"2025-08-11", body:`
+    <p>La routine perfetta non esiste; esiste quella che funziona per te. Noi puntiamo su pochi prodotti ben formulati: detergente delicato, siero mirato, crema con SPF. Evitiamo pack esagerati e promesse lunaresche. Se un prodotto è ottimo ma caro, suggeriamo <b>alternative equivalenti</b>. E se costa poco ma funziona, lo diciamo a gran voce. L’obiettivo non è riempire il bagno, ma far rendere il budget.</p>`},
+  {id:"p4", title:"Fai da te & Giardino: strumenti che durano", date:"2025-08-11", body:`
+    <p>Comprare male è comprare due volte. Preferiamo attrezzi con <b>ricambi disponibili</b>, assistenza decente e un po’ di sovradimensionamento: un trapano che non si surriscalda e un rasaerba che non si ferma a metà prato sono soldi risparmiati. Nei nostri consigli trovi pro e contro chiari, perché ogni casa e ogni mano sono diverse: meglio scegliere bene che inseguire la promo del giorno.</p>`},
+  {id:"p5", title:"Infanzia: sicurezza e praticità prima di tutto", date:"2025-08-11", body:`
+    <p>Quando si parla di bambini, la priorità è doppia: <b>sicurezza</b> e praticità. Per i passeggini contano ruote, telaio e facilità di chiusura; per seggiolini auto e navicelle informati sempre sulle norme aggiornate e sulle compatibilità con la tua auto. Noi selezioniamo prodotti che semplificano la vita: lavabili, robusti, ben progettati. E se il colore non è quello “di moda”, pazienza: il comfort vince.</p>`}
+];
+
+/* ========= Stato ========= */
+const FAV_KEY='os_fav_v11'; let FAVS=new Set(JSON.parse(localStorage.getItem(FAV_KEY)||'[]'));
+let QUERY=''; let SORT='best'; let CAT='all';
+
+/* ========= Helpers UI ========= */
+function stars(n){ const full=Math.floor(n); const half=(n-full)>=0.5 ? 1 : 0; return '★'.repeat(full)+ (half?'½':'') + '<span style="opacity:.4">'+ '★'.repeat(5-full-half)+'</span>'; }
+function spark(history){
+  const w=260,h=32,p=6,min=Math.min(...history),max=Math.max(...history);
+  const sx=i=>p+(i*(w-2*p)/(history.length-1)), sy=v=>p+(h-2*p)-(((v-min)/(max-min||1))*(h-2*p));
+  let d=""; history.forEach((v,i)=> d+=(i?'L':'M')+sx(i)+' '+sy(v)+' ');
+  const last=history.at(-1), first=history[0], col= last<first?'#22c55e':'#eab308';
+  return `<svg width="${w}" height="${h}" role="img" aria-label="Andamento prezzo"><path d="${d}" fill="none" stroke="${col}" stroke-width="2"/></svg>`;
+}
+function badge(o){
+  if(o.discount>=60) return `<div class="badge errore">⚡ Probabile errore di prezzo</div>`;
+  if(o.discount>=45) return `<div class="badge bomba">🔥 Offerta bomba</div>`;
+  if(o.priceWas && o.priceNow && o.priceNow<o.priceWas) return `<div class="badge">Risparmia ${fmtEur(o.priceWas - o.priceNow)}</div>`;
+  return '';
+}
+function aff(url, merchant, id){
+  const sub = "DEMO_"+id;
+  try{
+    if(merchant==='amazon'){ const u=new URL(url); if(!u.searchParams.get('tag')) u.searchParams.set('tag', AMAZON_TAG); u.searchParams.set('ascsubtag', sub); return u.toString(); }
+    if(merchant==='awin'){ return url + (url.includes('?')?'&':'?') + 'clickref=' + encodeURIComponent(sub); }
+    if(merchant==='tradedoubler'){ return url + (url.includes('?')?'&':'?') + 'epi=' + encodeURIComponent(sub); }
+  }catch(e){}
+  return url;
+}
+function card(o){
+  const fav=FAVS.has(o.id);
+  const url = Object.values(o.links)[0] || '#';
+  return `<article class="card" data-id="${o.id}">
+    ${badge(o)}
+    <button class="fav-btn ${fav?'active':''}" data-fav="${o.id}" aria-pressed="${fav}" aria-label="Aggiungi ai preferiti">❤️</button>
+    <img src="${o.image}" alt="${o.title}">
+    <div class="content">
+      <div class="title">${o.title}</div>${o.desc?`<p class="desc">${o.desc}</p>`:""}
+      <div class="stars">${stars(o.rating)} <span style="opacity:.7">(${o.reviews.toLocaleString('it-IT')})</span></div>
+      <div class="price"><span class="now">${fmtEur(o.priceNow)}</span> <span class="was">${fmtEur(o.priceWas)}</span> <span class="discount">-${o.discount}%</span></div>
+      <div class="tags"><span class="tag">Store: ${o.store}</span><span class="tag">Cat: ${catLabel(o.cat)}</span></div>
+      ${spark(o.history)}
+      <div class="cta">
+        <a class="btn primary" href="${aff(url, o.merchant, o.id)}" target="_blank" rel="nofollow sponsored">Vai all’offerta</a>
+        <button class="btn" data-detail="${o.id}">Dettagli</button>
+      </div>
+      <div class="cta">
+        ${o.coupon?`<span class="coupon-chip">Coupon <code>${o.coupon}</code> <button class="btn btn-copy" data-copy="${o.coupon}">Copia</button><span class="copy-ok">✓ Copiato</span></span>`:''}
+        <button class="btn" data-share="${o.id}">Condividi</button>
+      </div>
+    </div>
+  </article>`;
+}
+
+/* ========= Ordinamento e filtri ========= */
+const cmp = {
+  best: (a,b)=> (b.discount + b.rating/5) - (a.discount + a.rating/5),
+  discount_desc: (a,b)=> b.discount - a.discount,
+  price_asc: (a,b)=> a.priceNow - b.priceNow,
+  price_desc:(a,b)=> b.priceNow - a.priceNow,
+  reviews_desc:(a,b)=> b.reviews - a.reviews,
+  new_desc:(a,b)=> new Date(b.addedAt) - new Date(a.addedAt),
+};
+function filtered(){
+  let res = DEALS.slice();
+  if(CAT!=='all') res = res.filter(o => o.cat===CAT);
+  if(QUERY){ const t=QUERY.toLowerCase(); res = res.filter(o=> o.title.toLowerCase().includes(t)); }
+  res.sort(cmp[SORT] || cmp.best);
+  return res;
+}
+function syncControls(){
+  const sc = qs('#sortCompact'), cat = qs('#catSelect');
+  if(sc) sc.value = SORT;
+  if(cat) cat.value = CAT;
+}
+
+/* ========= Render ========= */
+function render(){
+  const list = filtered();
+  qs('#hero').innerHTML = list.slice(0,2).map(card).join('');
+  qs('#tops').innerHTML = list.slice(2,5).map(card).join('');
+  qs('#grid').innerHTML = list.map(card).join('');
+  qs('#resultsCount').textContent = `${list.length} risultati`;
+  qsa('.fav-btn').forEach(b => { const id=b.dataset.fav; b.classList.toggle('active', FAVS.has(id)); b.setAttribute('aria-pressed', b.classList.contains('active')); });
+  buildTicker(list);
+  syncControls();
+}
+function buildTicker(list){
+  const best = list.slice().sort(cmp.discount_desc).slice(0,8);
+  const items = best.map(o=> `<span class="tick">🔥 <b>-${o.discount}%</b> ${o.title} · <a href="${aff(Object.values(o.links)[0]||'#', o.merchant, o.id)}" target="_blank" rel="nofollow sponsored">Vai</a></span>`).join('');
+  const html = items + items;
+  const track = qs('#tickerTrack');
+  if(track){ track.innerHTML = html; }
+}
+
+/* ========= Interazioni card ========= */
+document.addEventListener('click', (e)=>{
+  const fav = e.target.closest('.fav-btn');
+  if(fav){
+    const id = fav.dataset.fav;
+    if(FAVS.has(id)) FAVS.delete(id); else FAVS.add(id);
+    localStorage.setItem(FAV_KEY, JSON.stringify([...FAVS]));
+    fav.classList.toggle('active'); fav.setAttribute('aria-pressed', fav.classList.contains('active'));
+    qs('#favCount').textContent = FAVS.size;
+    return;
+  }
+  const cp = e.target.closest('[data-copy]');
+  if(cp){
+    const code = cp.getAttribute('data-copy');
+    navigator.clipboard.writeText(code).then(()=>{
+      const ok = cp.parentElement.querySelector('.copy-ok'); if(ok){ ok.classList.add('show'); setTimeout(()=>ok.classList.remove('show'), 1200); }
+    });
+    return;
+  }
+  const det = e.target.closest('[data-detail]');
+  if(det){
+    const o = DEALS.find(x=> x.id===det.getAttribute('data-detail'));
+    if(o) openArticle(`<h3>${o.title}</h3><p>Dettagli sull'offerta (demo)</p>${spark(o.history)}`);
+    return;
+  }
+  const share = e.target.closest('[data-share]');
+  if(share){
+    const o = DEALS.find(x=> x.id===share.getAttribute('data-share'));
+    if(navigator.share){ navigator.share({title:o.title, text:'Guarda questa offerta', url:location.href}).catch(()=>{}); }
+    else { alert('Copia il link dalla barra degli indirizzi.'); }
+    return;
+  }
+});
+
+/* ========= Ricerca + suggerimenti ========= */
+const SKEY='recentSearches_v6';
+function loadRecent(){ return JSON.parse(localStorage.getItem(SKEY) || '[]'); }
+function saveRecent(arr){ localStorage.setItem(SKEY, JSON.stringify(arr.slice(0,8))); }
+function addRecent(term){
+  term = term.trim().toLowerCase();
+  if(!term) return;
+  const list = loadRecent().filter(x=>x!==term);
+  list.unshift(term); saveRecent(list);
+}
+function openSuggest(anchor){
+  const list = loadRecent();
+  const box = getSuggest();
+  if(!list.length){ box.style.display='none'; return; }
+  box.innerHTML = `<div class="head">Ricerche recenti</div>` + list.map(t=>`<div class="sugg-item" data-term="${t}">${t}</div>`).join('');
+  const r = anchor.getBoundingClientRect();
+  box.style.left = Math.max(8, r.left) + 'px';
+  box.style.top  = (r.bottom + 6) + 'px';
+  box.style.width = Math.min(360, Math.max(220, r.width)) + 'px';
+  box.style.display = 'block';
+}
+function closeSuggest(){ getSuggest().style.display='none'; }
+function getSuggest(){ let b=qs('#suggest'); if(!b){ b=document.createElement('div'); b.id='suggest'; b.className='suggest'; document.body.appendChild(b);} return b; }
+function doSearch(term){
+  term = (term||'').trim();
+  if(!term) return;
+  QUERY = term;
+  addRecent(term);
+  closeSuggest();
+  render();
+}
+qs('#q').addEventListener('focus', e=> openSuggest(e.target));
+qs('#q').addEventListener('blur', ()=> setTimeout(closeSuggest, 120));
+qs('#q').addEventListener('keydown', (e)=>{ if(e.key==='Enter'){ e.preventDefault(); doSearch(qs('#q').value); }});
+qs('#btnSearch').addEventListener('click', ()=> doSearch(qs('#q').value));
+document.body.addEventListener('click', (e)=>{
+  const it = e.target.closest('.sugg-item'); if(!it) return;
+  const t = it.getAttribute('data-term'); qs('#q').value = t; doSearch(t);
+});
+
+/* ========= Burger Popover ========= */
+const pop = qs('#popMenu'); const scrim = qs('#popScrim'); const burger = qs('#btnBurger');
+function gutters(){
+  const main = qs('main.container'); const vw = innerWidth;
+  const rect = main ? main.getBoundingClientRect() : {left:12, right: vw-12};
+  return { left: Math.max(0, rect.left), right: Math.max(0, vw - rect.right), vw };
+}
+function placePop(){
+  const r = burger.getBoundingClientRect();
+  const {left:gL, right:gR, vw} = gutters();
+  pop.style.visibility='hidden'; pop.style.display='block';
+  const pw = pop.offsetWidth, ph = pop.offsetHeight;
+  pop.style.visibility='';
+  const vh = innerHeight;
+  const spaceBelow = vh - (r.bottom + 12);
+  const openTop = spaceBelow < ph;
+  const top = openTop ? (r.top - ph - 12) : (r.bottom + 12);
+  const left = gL;
+  pop.style.top = top + 'px'; pop.style.left = left + 'px';
+  pop.style.maxWidth = Math.max(220, vw - gL - gR - 2) + 'px';
+  const ox = (r.left + r.width/2) - left;
+  pop.style.setProperty('--pop-ox', ox + 'px');
+  pop.style.setProperty('--caret-x', (Math.min(pw-18, Math.max(12, ox)) - 6) + 'px');
+  pop.style.setProperty('--caret-top', openTop ? (ph - 6) + 'px' : '-6px');
+}
+function openPop(){ placePop(); scrim.style.display='block'; pop.classList.add('open'); burger.setAttribute('aria-expanded','true'); }
+function closePop(){ pop.classList.remove('open'); setTimeout(()=>{pop.style.display='none'; scrim.style.display='none';}, 220); burger.setAttribute('aria-expanded','false'); }
+burger.addEventListener('click', ()=> pop.classList.contains('open')? closePop(): openPop());
+scrim.addEventListener('click', closePop);
+addEventListener('resize', ()=>{ if(pop.classList.contains('open')) placePop(); }, {passive:true});
+addEventListener('scroll', ()=>{ if(pop.classList.contains('open')) placePop(); }, {passive:true});
+// Handle device rotation: reopen automatically if it was open
+addEventListener('orientationchange', ()=>{
+  try{
+    const wasOpen = pop.classList.contains('open');
+    closePop();
+    pop.style.removeProperty('top'); pop.style.removeProperty('left');
+    if(wasOpen){ setTimeout(()=>{ openPop(); }, 420); }
+  }catch(e){}
+});
+document.addEventListener('visibilitychange', ()=>{ if(document.hidden) closePop(); });
+pop.addEventListener('click', (e)=>{
+  const it = e.target.closest('.pop-item'); if(!it) return;
+  const key = it.getAttribute('data-open');
+  closePop();
+  if(key==='home'){ SORT='best'; CAT='all'; QUERY=''; qs('#q').value=''; render(); return; }
+  if(key==='guides'){ openList('m-guides', GUIDES, true); return; }
+  if(key==='about'){ openModal('m-about'); return; }
+  if(key==='blog'){ openList('m-blog', POSTS, false); return; }
+  if(key==='favs'){ qs('#favToggle').click(); return; }
+  if(key==='settings'){ openModal('m-settings'); return; }
+  if(key==='privacy'){ openModal('m-privacy'); return; }
+  if(key==='cookie'){ openModal('m-cookie'); return; }
+  if(key==='tos'){ openModal('m-tos'); return; }
+  if(key==='contact'){ openModal('m-contact'); return; }
+});
+
+/* ========= Modali + Liste ========= */
+function openModal(id){ qs('#'+id).style.display='flex'; }
+function closeAllModals(){ qsa('.modal').forEach(m=> m.style.display='none'); }
+qsa('[data-close]').forEach(b=> b.addEventListener('click', closeAllModals));
+document.addEventListener('keydown', (e)=>{ if(e.key==='Escape') closeAllModals(); });
+function openArticle(html){ qs('#article').innerHTML = html; openModal('m-article'); }
+function openList(id, items, isGuide){
+  const tgt = qs('#'+id);
+  const grid = tgt.querySelector(isGuide?'#guides':'#blog');
+  grid.innerHTML = items.map(x=>`<article class="card" data-id="${x.id}">\n<button class="fav-btn ${FAVS.has(x.id)?'active':''}" data-fav="${x.id}" aria-pressed="${FAVS.has(x.id)}" aria-label="Aggiungi ai preferiti">❤️</button><img src="https://images.unsplash.com/photo-1542401886-65d6c61db817?q=80&w=1200&auto=format&fit=crop" alt="" style="width:100%;aspect-ratio:16/9;object-fit:cover"><div class="content"><div class="title">${x.title}</div><p style="color:var(--muted)">${isGuide?x.excerpt:('Pubblicato il '+x.date)}</p><div class="cta"><button class="btn" data-read="${x.id}">Leggi</button></div></div></article>`).join('');
+  openModal(id);
+}
+document.body.addEventListener('click', (e)=>{
+  const read = e.target.closest('[data-read]');
+  if(read){
+    const id = read.getAttribute('data-read');
+    const g = GUIDES.find(x=>x.id===id) || POSTS.find(x=>x.id===id);
+    if(g) openArticle(`<h3>${g.title}</h3>${g.body||'<p>...</p>'}`);
+  }
+});
+
+/* ========= Auth demo + preferiti ========= */
+qs('#favToggle').addEventListener('click', ()=>{
+  const favs = DEALS.filter(o=> FAVS.has(o.id));
+  const html = favs.length ? favs.map(o=>`<div class="card"><div class="content"><div class="title">${o.title}</div>${o.desc?`<p class="desc">${o.desc}</p>`:""}<div class="price"><span class="now">${fmtEur(o.priceNow)}</span></div><a class="btn primary" href="${aff(Object.values(o.links)[0]||'#', o.merchant, o.id)}" target="_blank" rel="nofollow sponsored">Vai</a></div></div>`).join('') : "<p>Nessun preferito.</p>";
+  qs('#favs').innerHTML = html; openModal('m-favs');
+});
+qs('#btnLogin').addEventListener('click', ()=> openModal('m-login'));
+qs('#btnRegister').addEventListener('click', ()=> openModal('m-register'));
+qs('#btnLogout').addEventListener('click', ()=> alert('Logout demo'));
+qs('#doLogin').addEventListener('click', ()=>{ alert('Login ok (demo)'); closeAllModals(); });
+qs('#doRegister').addEventListener('click', ()=>{ alert('Registrazione ok (demo)'); closeAllModals(); });
+
+/* ========= Controlli: sort + cat (solo in alto) ========= */
+function setSort(v){ SORT=v; render(); }
+function setCat(v){ CAT=v; render(); }
+(()=>{ const el = qs('#sortCompact'); if(el) el.addEventListener('change', e=> setSort(e.target.value)); })();
+(()=>{ const el = qs('#catSelect'); if(el) el.addEventListener('change', e=> setCat(e.target.value)); })();
+/* ========= Init ========= */
+qs('#favCount').textContent = FAVS.size;
+render();
+
+// Open detailed modal for a deal
+function openDealDetails(dealId){
+  const d = DEALS.find(x=>x.id===dealId);
+  if(!d){ console.warn('Deal not found', dealId); return; }
+  const el = document.getElementById('deal-detail');
+  const stars = '★'.repeat(Math.round(d.rating||0)) + '☆'.repeat(5-Math.round(d.rating||0));
+  const couponBtn = d.coupon ? `<button class="btn ghost" data-copy="${d.coupon}" title="Copia coupon">${d.coupon}</button>` : '';
+  const badgeList = [`${d.merchant?.toUpperCase()||'STORE'}`, d.discount?`-${d.discount}%`:'', d.reviews?`${d.reviews} recensioni`:'' ].filter(Boolean).map(b=>`<span class="badge">${b}</span>`).join('');
+  const thumbs = (d.gallery||[d.image]).map((src,i)=>`<img src="${src}" alt="anteprima ${i+1}" data-main="${src}">`).join('');
+  const specs = (d.specs||[]).map(s=>`<li><span>${s[0]}</span><span>${s[1]}</span></li>`).join('');
+  const pros = (d.pros||[]).map(p=>`<li>✅ ${p}</li>`).join('');
+  const cons = (d.cons||[]).map(c=>`<li>⚠️ ${c}</li>`).join('');
+
+  el.innerHTML = `
+    <div class="deal-head">
+      <div style="flex:1">
+        <h4 class="deal-title">${d.title}</h4>
+        <div class="deal-meta">${stars} <span>·</span> <span>${d.rating?.toFixed?d.rating.toFixed(1):d.rating || 'N.D.'} / 5</span> <span>·</span> <span>${d.reviews||0} recensioni</span></div>
+        <div class="deal-price"><span class="now">€${d.priceNow?.toFixed?d.priceNow.toFixed(2):d.priceNow}</span>${d.priceWas?`<span class="was">€${d.priceWas}</span>`:''}</div>
+        <div class="deal-actions">
+          <a class="btn primary" href="${(d.links&& (d.links.amazon||d.links.awin||d.links.tradedoubler)) || '#'}" target="_blank" rel="nofollow noopener">Vedi su ${d.store||'negozio'}</a>
+          ${couponBtn}
+          <button class="btn ghost" data-fav="${d.id}">❤️ Preferito</button>
+          <button class="btn ghost" data-share="${d.id}">Condividi</button>
+        </div>
+        <div class="badges" style="margin-top:8px">${badgeList}</div>
+      </div>
+    </div>
+
+    <div class="detail-grid">
+      <div class="gallery">
+        <img class="main-img" src="${(d.gallery&&d.gallery[0]) || d.image}" alt="${d.title}" id="detail-main">
+        <div class="thumbs">${thumbs}</div>
+      </div>
+      <div class="specs">
+        <h4>Specifiche essenziali</h4>
+        <ul>${specs || '<li>Dati in aggiornamento</li>'}</ul>
+        <div class="longdesc" style="margin-top:10px">${d.longDesc || d.desc || ''}</div>
+        <div class="pros-cons">
+          <div class="box pros"><h5>Pro</h5><ul>${pros||'<li>-</li>'}</ul></div>
+          <div class="box cons"><h5>Contro</h5><ul>${cons||'<li>-</li>'}</ul></div>
+        </div>
+        <p class="disclosure">Trasparenza: potremmo ricevere una piccola commissione dagli acquisti idonei. Il prezzo per te non cambia.</p>
+      </div>
+    </div>
+  `;
+
+  // Thumbs interaction
+  el.querySelectorAll('.thumbs img').forEach(img=>{
+    img.addEventListener('click', ()=>{
+      const main = el.querySelector('#detail-main');
+      main.src = img.getAttribute('data-main');
+    });
+  });
+
+  // Copy coupon
+  el.querySelectorAll('[data-copy]').forEach(btn=>{
+    btn.addEventListener('click', async ()=>{
+      try{ await navigator.clipboard.writeText(btn.getAttribute('data-copy')); btn.textContent='Copiato!'; setTimeout(()=>btn.textContent=d.coupon, 1600); }catch(e){ alert('Copia non supportata'); }
+    });
+  });
+
+  // Favorite
+  el.querySelectorAll('[data-fav]').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      toggleFavorite(d.id);
+      btn.textContent = isFavorite(d.id) ? '❤️ Nei preferiti' : '❤️ Preferito';
+    });
+  });
+
+  // Share (fallback)
+  el.querySelectorAll('[data-share]').forEach(btn=>{
+    btn.addEventListener('click', async ()=>{
+      const shareData = { title: d.title, text: d.title, url: (d.links&& (d.links.amazon||d.links.awin||d.links.tradedoubler)) || location.href };
+      if(navigator.share){ try{ await navigator.share(shareData); }catch(e){} }
+      else{ await navigator.clipboard.writeText(shareData.url); btn.textContent='Link copiato'; setTimeout(()=>btn.textContent='Condividi',1400); }
+    });
+  });
+
+  openModal('m-deal');
+}
+
+
+// Delegated: open details from cards
+document.addEventListener('click', (e)=>{
+  const btn = e.target.closest('.btn-details');
+  if(btn){ e.preventDefault(); openDealDetails(btn.getAttribute('data-id')); }
+  const imgCard = e.target.closest('.card')?.querySelector('img');
+  // Optionally: click on image opens details
+  if(e.target.tagName==='IMG' && e.target.closest('.card')){
+    const id = e.target.closest('.card').getAttribute('data-id');
+    if(id){ openDealDetails(id); }
+  }
+});
+
+
+</script>
+<script>
+(function(){
+  if (window.__GLOBAL_HEADER_INIT__) return; window.__GLOBAL_HEADER_INIT__ = true;
+
+  // Utils identical for all pages
+  const qs = s => document.querySelector(s);
+  const qsa = s => [...document.querySelectorAll(s)];
+  const nf = new Intl.NumberFormat('it-IT',{style:'currency',currency:'EUR',maximumFractionDigits:0});
+
+  // Burger (same placement logic as home)
+  function placePop(burger, pop) {
+    try{
+      const r = burger.getBoundingClientRect();
+      const vw = Math.max(document.documentElement.clientWidth, window.innerWidth||0);
+      const ph = pop.offsetHeight || 260, pw = pop.offsetWidth || 260;
+      const gL = 12, gR = 12;
+      const vh = window.innerHeight || document.documentElement.clientHeight;
+      const spaceBelow = vh - (r.bottom + 12);
+      const openTop = spaceBelow < ph;
+      const top = openTop ? (r.top - ph - 12) : (r.bottom + 12);
+      const left = Math.max(gL, Math.min(vw - gR - pw, r.left + r.width/2 - pw/2));
+      pop.style.top = top + 'px'; pop.style.left = left + 'px';
+      pop.style.maxWidth = Math.max(220, vw - gL - gR - 2) + 'px';
+      const ox = (r.left + r.width/2) - left;
+      pop.style.setProperty('--pop-ox', ox + 'px');
+      pop.style.setProperty('--caret-x', (Math.min(pw-18, Math.max(12, ox)) - 6) + 'px');
+      pop.style.setProperty('--caret-top', openTop ? (ph - 6) + 'px' : '-6px');
+    }catch(e){}
+  }
+  function bindBurger(){
+    const burger = qs('#btnBurger'), pop = qs('#popMenu'), scrim = qs('#popScrim');
+    if(!burger || !pop || !scrim) return;
+    function openPop(){ placePop(burger, pop); scrim.style.display='block'; pop.classList.add('open'); burger.setAttribute('aria-expanded','true'); }
+    function closePop(){ pop.classList.remove('open'); setTimeout(()=>{scrim.style.display='none';},200); burger.setAttribute('aria-expanded','false'); }
+    burger.addEventListener('click', (e)=>{ e.preventDefault(); if(pop.classList.contains('open')) closePop(); else openPop(); });
+    scrim.addEventListener('click', closePop);
+    window.addEventListener('resize', ()=>{ if(pop.classList.contains('open')) placePop(burger, pop); }, {passive:true});
+    window.addEventListener('scroll', ()=>{ if(pop.classList.contains('open')) placePop(burger, pop); }, {passive:true});
+    document.addEventListener('keydown', (e)=>{ if(e.key==='Escape') closePop(); });
+    document.addEventListener('visibilitychange', ()=>{ if(document.hidden) pop.classList.remove('open'); });
+  }
+
+  // Ticker identical placement: just below the search in header
+  function getDeals(){ 
+    if (Array.isArray(window.DEALS)) return window.DEALS;
+    try { window.DEALS = [
+  { id:"d1", title:"Friggitrice ad Aria 5.5L", desc:"Cestello antiaderente, 8 programmi, facile da pulire. Ideale per porzioni familiari con minore olio.", rating:4.6, reviews:3560, cat:"casa_cucina", store:"Amazon", merchant:"amazon", priceNow:89, priceWas:139, discount:36, coupon:"AIR10", image:"https://images.unsplash.com/photo-1606756790138-261c7d3113b9?q=80&w=1200&auto=format&fit=crop", history:[139,129,119,99,89], addedAt:"2025-08-05", links:{ amazon:"https://www.amazon.it/dp/B08XYZXYZ" , gallery:['https://images.unsplash.com/photo-1606756790138-261c7d3113b9?q=80&w=1200&auto=format&fit=crop','https://images.unsplash.com/photo-1546069901-ba9599a7e63c?q=80&w=1200&auto=format&fit=crop','https://images.unsplash.com/photo-1543352634-8730a9b43ae4?q=80&w=1200&auto=format&fit=crop'], pros:['Cuoce in modo uniforme','Cestello grande per famiglia','Facile da pulire','Programmi essenziali, non troppi'], cons:['Ingombro sul piano cucina','Nessuna app/ricette integrate','Rumore ventola udibile a piena potenza'], specs:[['Capienza','5.5 L'],['Potenza','1700 W'],['Lavastoviglie','Cestello sì'],['Programmi','8'],['Garanzia','2 anni']], longDesc:`Abbiamo cucinato patate, pollo e verdure per più giorni: la resa è stata costante, con doratura uniforme senza odori forti. Non è un modello “smart”: per molti è un pro (meno complessità), per chi vuole app/appunti è un contro. Dopo 2 settimane di uso, il rivestimento è ancora perfetto. Consigliata a chi vuole qualità senza spendere troppo.`} },
+  { id:"d2", title:"Cibo Secco Premium per Cani 12kg", desc:"Ricco di proteine con ingredienti dichiarati, senza coloranti. Sacco richiudibile anti-odore.", rating:4.7, reviews:1420, cat:"animali", store:"Zooplus", merchant:"awin", priceNow:39, priceWas:59, discount:34, coupon:"DOG5", image:"https://images.unsplash.com/photo-1548199973-03cce0bbc87b?q=80&w=1200&auto=format&fit=crop", history:[59,55,49,45,39], addedAt:"2025-08-06", links:{ awin:"https://www.awin1.com/cread.php?awinmid=222&awinaffid=333" , gallery:['https://images.unsplash.com/photo-1548199973-03cce0bbc87b?q=80&w=1200&auto=format&fit=crop','https://images.unsplash.com/photo-1612539927811-2b18a6c41f5e?q=80&w=1200&auto=format&fit=crop'], pros:['Buona tollerabilità','Rapporto qualità/prezzo','Sacco richiudibile comodo'], cons:['Crocche non adatte a cani molto piccoli','Nessuna variante grain-free','Odore intenso all’apertura'], specs:[['Formato','12 kg'],['Proteine','24%'],['Conservazione','Sacco richiudibile'],['Origine','UE']], longDesc:`Provato su due cani (taglia media): feci regolari e pelo lucido dopo 10 giorni. Non è super premium, ma in promo è un ottimo compromesso. Se il tuo cane è sensibile ai cereali, valuta alternative grain-free.`} },
+  { id:"d3", title:"Siero Viso Acido Ialuronico 60ml", desc:"Texture leggera, ad assorbimento rapido. Ingredienti essenziali, adatto a tutti i tipi di pelle.", rating:4.4, reviews:2300, cat:"bellezza", store:"Amazon", merchant:"amazon", priceNow:12, priceWas:19, discount:37, coupon:null, image:"https://images.unsplash.com/photo-1512496015851-a90fb38ba796?q=80&w=1200&auto=format&fit=crop", history:[19,17,15,13,12], addedAt:"2025-08-08", links:{ amazon:"https://www.amazon.it/dp/B0AAABBBB" , gallery:['https://images.unsplash.com/photo-1512496015851-a90fb38ba796?q=80&w=1200&auto=format&fit=crop','https://images.unsplash.com/photo-1545239351-1141bd82e8a6?q=80&w=1200&auto=format&fit=crop'], pros:['Texture leggera','INCI essenziale','Ottimo sotto il make-up'], cons:['Flacone senza contagocce di qualità','Profumo leggero non per tutti'], specs:[['Contenuto','60 ml'],['Attivo','Acido Ialuronico'],['Profumo','Leggero'],['Pelli','Tutte']], longDesc:`Usato mattina e sera per due settimane: pelle più elastica, senza pilling con la crema solare. Non aspettarti miracoli anti-età: è idratazione onesta a prezzo corretto.`} },
+  { id:"d4", title:"Trapano Avvitatore 18V con Accessori", desc:"Coppia regolabile, luce LED e set punte incluso. Valigetta rigida per riporre tutto.", rating:4.5, reviews:980, cat:"fai_da_te", store:"Leroy Merlin", merchant:"tradedoubler", priceNow:69, priceWas:99, discount:30, coupon:null, image:"https://images.unsplash.com/photo-1504148455329-4ff0802cfb7e?q=80&w=1200&auto=format&fit=crop", history:[99,92,85,79,69], addedAt:"2025-07-30", links:{ tradedoubler:"https://clk.tradedoubler.com/click?p=333&a=444" , gallery:['https://images.unsplash.com/photo-1504148455329-4ff0802cfb7e?q=80&w=1200&auto=format&fit=crop','https://images.unsplash.com/photo-1511207538754-e855bd8f15a5?q=80&w=1200&auto=format&fit=crop'], pros:['Buona coppia per lavori leggeri','Valigetta con accessori','Luce LED utile in spazi stretti'], cons:['Non adatto a muratura impegnativa','Mandrino con lieve gioco','Batteria singola in confezione base'], specs:[['Voltaggio','18 V'],['Modalità','Trapano/Avvitatore'],['Accessori','Sì'],['Luce','LED']], longDesc:`Perfetto per casa: mensole, piccoli montaggi, riparazioni. Per fori importanti nel cemento serve altro. Il LED fa la differenza in armadi e nicchie.`} },
+  { id:"d5", title:"Passeggino Leggero Pieghevole", desc:"Telaio in alluminio, schienale reclinabile e chiusura con una mano. Omologato fino a 15 kg.", rating:4.6, reviews:640, cat:"infanzia", store:"Amazon", merchant:"amazon", priceNow:99, priceWas:159, discount:38, coupon:"BABY10", image:"https://images.unsplash.com/photo-1631049307264-da0ec9d70304?q=80&w=1200&auto=format&fit=crop", history:[159,149,129,119,99], addedAt:"2025-08-04", links:{ amazon:"https://www.amazon.it/dp/B0CCCCCCC" , gallery:['https://images.unsplash.com/photo-1631049307264-da0ec9d70304?q=80&w=1200&auto=format&fit=crop','https://images.unsplash.com/photo-1595433707802-6b2626ef1c86?q=80&w=1200&auto=format&fit=crop'], pros:['Si chiude con una mano','Molto leggero','Tessuti facili da pulire'], cons:['Cesto sottosedile non enorme','Ruote piccole su sanpietrini','Colori limitati'], specs:[['Peso','6.9 kg'],['Omologazione','fino 15 kg'],['Chiusura','One-hand'],['Accessori','Parapioggia']], longDesc:`Provato su marciapiedi e mezzi pubblici: maneggevole e stabile. Non è un fuoristrada, ma per città va benissimo. Seduta comoda, cinture rapide.`} },
+  { id:"d6", title:"Set Pentole Acciaio 10 pz", desc:"Fondo adatto a induzione, manici isolanti e coperchi in vetro. Lavabile in lavastoviglie.", rating:4.5, reviews:620, cat:"casa_cucina", store:"Amazon", merchant:"amazon", priceNow:99, priceWas:149, discount:34, coupon:null, image:"https://images.unsplash.com/photo-1544025162-d76694265947?q=80&w=1200&auto=format&fit=crop", history:[149,139,129,119,99], addedAt:"2025-08-01", links:{ amazon:"https://www.amazon.it/dp/B0DDDDEEEE" , gallery:['https://images.unsplash.com/photo-1544025162-d76694265947?q=80&w=1200&auto=format&fit=crop','https://images.unsplash.com/photo-1485968579580-b6d095142e6e?q=80&w=1200&auto=format&fit=crop'], pros:['Fondo a sandwich per induzione','Coperchi in vetro con sfiato','Impilabili e lavabili'], cons:['Manici che scaldano a fiamma alta','Niente scala interna di misure'], specs:[['Pezzi','10'],['Materiale','Acciaio'],['Lavastoviglie','Sì'],['Compatibilità','Induzione']], longDesc:`Qualità solida per uso quotidiano. Non antiaderenti: serve un filo d’olio in più ma durano nel tempo. In promo diventano un best buy.`} },
+  { id:"d7", title:"Tosaerba Elettrico 1400W", desc:"Larghezza taglio 32 cm, raccolta 30 L, regolazione altezza in 3 posizioni. Perfetto per giardini piccoli.", rating:4.2, reviews:510, cat:"fai_da_te", store:"Amazon", merchant:"amazon", priceNow:119, priceWas:179, discount:34, coupon:null, image:"https://images.unsplash.com/photo-1523419410227-deebaa99fd0f?q=80&w=1200&auto=format&fit=crop", history:[179,169,149,139,119], addedAt:"2025-07-25", links:{ amazon:"https://www.amazon.it/dp/B0FFFFGGGG" , gallery:['https://images.unsplash.com/photo-1523419410227-deebaa99fd0f?q=80&w=1200&auto=format&fit=crop','https://images.unsplash.com/photo-1562599938-7208977f7baf?q=80&w=1200&auto=format&fit=crop'], pros:['Leggero e facile da spingere','Raccolta sufficiente per 200 m²','Regolazione altezza rapida'], cons:['Cavo da gestire (non è a batteria)','Rumore nella media','Scocca non metallica'], specs:[['Potenza','1400 W'],['Larghezza taglio','32 cm'],['Cesto','30 L'],['Terreno','fino 250 m²']], longDesc:`Se hai un giardino piccolo/medio fa il suo, senza spese di batterie. Lame sostituibili facili da trovare. Attenzione a cavi e prolunghe di qualità.`} },
+  { id:"d8", title:"Cuccia Morbida per Gatti L", desc:"Interno in peluche, fondo antiscivolo e cuscino estraibile. Lavabile in lavatrice 30°.", rating:4.5, reviews:880, cat:"animali", store:"Amazon", merchant:"amazon", priceNow:25, priceWas:39, discount:36, coupon:null, image:"https://images.unsplash.com/photo-1518791841217-8f162f1e1131?q=80&w=1200&auto=format&fit=crop", history:[39,35,32,29,25], addedAt:"2025-08-02", links:{ amazon:"https://www.amazon.it/dp/B0HHHHIIII" , gallery:['https://images.unsplash.com/photo-1518791841217-8f162f1e1131?q=80&w=1200&auto=format&fit=crop','https://images.unsplash.com/photo-1573865526739-10659fec78a5?q=80&w=1200&auto=format&fit=crop'], pros:['Morbida e avvolgente','Fondo antiscivolo','Cuscino estraibile'], cons:['Taglia L stretta per gatti XXL','Colore chiaro si sporca facilmente'], specs:[['Taglia','L'],['Lavaggio','30°'],['Fondo','Antiscivolo'],['Uso','Interno']], longDesc:`I gatti ci saltano dentro in pochi minuti (testato con 2 mici redattori). Calda, stabile, zero odore chimico al primo uso.`} }
+]; } catch(e){ window.DEALS = []; }
+    return window.DEALS;
+  }
+  function ensureTicker(){
+    const hInner = qs('#hInner') || qs('header');
+    if(!hInner) return;
+    const search = hInner.querySelector('.search, form[role="search"], .searchbar, #search, input[type="search"]');
+    let wrap = hInner.querySelector('#headerTicker');
+    if(!wrap){ wrap = document.createElement('div'); wrap.id='headerTicker'; wrap.className='ticker-wrap'; }
+    if(search && search.parentNode){
+      const parent = search.parentNode;
+      if(wrap.parentNode!==parent || wrap.previousElementSibling!==search){
+        if(search.nextSibling) parent.insertBefore(wrap, search.nextSibling);
+        else parent.appendChild(wrap);
+      }
+    } else {
+      if(wrap.parentNode!==hInner) hInner.appendChild(wrap);
+    }
+    let inner = wrap.querySelector('.ticker'); if(!inner){ inner = document.createElement('div'); inner.className='ticker'; wrap.appendChild(inner); }
+    let track = wrap.querySelector('.ticker-track'); if(!track){ track = document.createElement('div'); track.className='ticker-track'; inner.appendChild(track); }
+    const arr = getDeals().slice(0, 20);
+    const html = arr.map(o=>{
+      const title = o.title || o.name || '';
+      const now   = Number(o.priceNow ?? o.price ?? o.current_price ?? 0);
+      const was   = Number(o.priceWas ?? o.old_price ?? 0);
+      const pct   = o.discount ?? (was && now ? Math.round(100 - (now*100/was)) : 0);
+      const href  = (o.links && (o.links.amazon || o.links.awin || o.links.default)) || o.url || '#';
+      const price = now ? nf.format(now) : '';
+      const pctTxt = pct ? ` (-${pct}%)` : '';
+      return `<a class="tick" href="${href}" target="_blank" rel="nofollow sponsored">💥 <b>${title} — ${price}${pctTxt}</b></a>`;
+    }).join('');
+    track.innerHTML = html || '<span class="tick"><b>Offerteshock</b> — offerte in aggiornamento…</span>';
+  }
+
+  function init(){
+    bindBurger();
+    ensureTicker();
+  }
+  if (document.readyState!=='loading') init();
+  else document.addEventListener('DOMContentLoaded', init);
+})();
+</script>
+<script>
+(function(){
+  // Safety re-bind for burger on subpages
+  var b = document.getElementById('btnBurger');
+  var pop = document.getElementById('popMenu');
+  var scrim = document.getElementById('popScrim');
+  if(!b || !pop || !scrim) return;
+  function toggle(){ 
+    var open = pop.classList.toggle('open');
+    scrim.style.display = open ? 'block' : 'none';
+    b.setAttribute('aria-expanded', open?'true':'false');
+  }
+  // Remove default action just in case
+  b.setAttribute('type','button');
+  // Bind with capture=false to avoid interfering others
+  b.addEventListener('click', function(e){ e.preventDefault(); toggle(); }, false);
+  scrim.addEventListener('click', function(){ pop.classList.remove('open'); scrim.style.display='none'; b.setAttribute('aria-expanded','false'); }, false);
+})();
+</script>
+<script>
+(function(){
+  if (window.__NO_RELOAD_SAME_PAGE__) return; window.__NO_RELOAD_SAME_PAGE__ = true;
+  function samePath(aHref){
+    try{
+      const url = new URL(aHref, location.href);
+      const to  = url.pathname.replace(/\/$/, '/index.html');
+      const cur = location.pathname.replace(/\/$/, '/index.html');
+      return (url.origin === location.origin) && (to === cur);
+    }catch(e){ return false; }
+  }
+  document.addEventListener('click', function(e){
+    const a = e.target.closest('a');
+    if(!a || !a.href) return;
+    if(samePath(a.href)){
+      e.preventDefault();
+      // Close burger if open
+      const pop = document.getElementById('popMenu'); 
+      const scr = document.getElementById('popScrim');
+      if(pop) pop.classList.remove('open');
+      if(scr) scr.style.display='none';
+    }
+  }, true);
+})();
+</script>
+<div class="footer" style="opacity:.8;margin:28px 0">
+<p>Demo offline con il tuo tema. Sostituisci i link con i tuoi deeplink affiliati. In qualità di Affiliato Amazon, potrei ricevere un compenso dagli acquisti idonei.</p>
+<p><a href="privacy.html">Privacy</a> · <a href="cookie.html">Cookie</a> · <a href="termini.html">Termini</a></p>
+</div>
 </body></html>

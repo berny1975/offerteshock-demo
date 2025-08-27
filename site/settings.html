@@ -1,6 +1,6 @@
 <!doctype html><html lang="it"><head>
 <meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
-<meta name="theme-color" content="#0b0e13"/><title>Contatti · OfferteShock</title>
+<meta name="theme-color" content="#0b0e13"/><title>Impostazioni · OfferteShock</title>
 <link rel="stylesheet" href="./assets/styles.css"/></head><body>
 <header class="fullbleed">
 <div class="h-inner" id="hInner">
@@ -56,23 +56,26 @@
 
 <main class="container">
 
-<div class="wrap">
-  <div class="card">
-    <h1>Contattaci</h1>
-    <p>Per richieste o esercizio dei diritti privacy, scrivici.</p>
-    <form action="mailto:info@tuodominio.it" method="post" enctype="text/plain" onsubmit="alert('Si aprirà il tuo client email per inviare la richiesta.');">
-      <div style="display:grid;gap:12px;max-width:520px">
-        <input required placeholder="Il tuo nome" name="nome" style="padding:12px;border-radius:10px;border:1px solid rgba(255,255,255,.15);background:#0f1320;color:#e7edf3">
-        <input required type="email" placeholder="La tua email" name="email" style="padding:12px;border-radius:10px;border:1px solid rgba(255,255,255,.15);background:#0f1320;color:#e7edf3">
-        <textarea required rows="5" placeholder="Messaggio" name="messaggio" style="padding:12px;border-radius:10px;border:1px solid rgba(255,255,255,.15);background:#0f1320;color:#e7edf3"></textarea>
-        <button class="btn" type="submit">Invia</button>
-      </div>
-    </form>
-    <p style="color:#aab4c3;margin-top:12px">Sostituisci <code>info@tuodominio.it</code> con la tua email o integra un servizio form esterno.</p>
-    <p><a class="btn" href="./index.html">Torna alla home</a></p>
-  </div>
-  <footer>© <span id="y"></span> OfferteShock · <a href="./privacy.html">Privacy</a> · <a href="./termini.html">Termini</a></footer>
+
+
+
+
+<!-- Burger Popover + scrim -->
+
+
+
+<main class="container">
+<div class='card'><h1>Impostazioni</h1><p>Qui potrai gestire account, notifiche e preferenze.</p></div>
+
+</main>
+
+
+
+<div class="footer" style="opacity:.8;margin:28px 0">
+<p>Demo offline con il tuo tema. Sostituisci i link con i tuoi deeplink affiliati. In qualità di Affiliato Amazon, potrei ricevere un compenso dagli acquisti idonei.</p>
+<p><a href="privacy.html">Privacy</a> · <a href="cookie.html">Cookie</a> · <a href="termini.html">Termini</a></p>
 </div>
+</main>
 
 <script>
 
@@ -646,8 +649,4 @@ document.addEventListener('click', (e)=>{
   }, true);
 })();
 </script>
-<div class="footer" style="opacity:.8;margin:28px 0">
-<p>Demo offline con il tuo tema. Sostituisci i link con i tuoi deeplink affiliati. In qualità di Affiliato Amazon, potrei ricevere un compenso dagli acquisti idonei.</p>
-<p><a href="privacy.html">Privacy</a> · <a href="cookie.html">Cookie</a> · <a href="termini.html">Termini</a></p>
-</div>
 </body></html>

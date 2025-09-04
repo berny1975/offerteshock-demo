@@ -28,6 +28,7 @@
 <span class="label" id="labCat">Categorie:</span>
 <span class="select small"><select aria-labelledby="labCat" id="catSelect">
 <option value="all">Tutte</option>
+<option value="elettronica">Elettronica &amp; Tech</option>
 <option value="casa_cucina">Casa e Cucina</option>
 <option value="animali">Prodotti per Animali</option>
 <option value="bellezza">Bellezza &amp; Cura Persona</option>
@@ -61,6 +62,25 @@
 </div>
 <!-- Barra migliori offerte (ticker) -->
 <main class="container">
+
+<!-- Demo Features Banner -->
+<div class="demo-banner">
+  <div class="demo-content">
+    <h2>🚀 Demo OfferteSHOCK - Tutte le Funzionalità</h2>
+    <p>Esplora tutte le caratteristiche di questa piattaforma di offerte avanzata:</p>
+    <div class="demo-features">
+      <span class="demo-tag">⚡ Offerte Flash in tempo reale</span>
+      <span class="demo-tag">💎 Prodotti trending</span>
+      <span class="demo-tag">🎯 Filtri intelligenti</span>
+      <span class="demo-tag">❤️ Sistema preferiti</span>
+      <span class="demo-tag">📊 Storico prezzi</span>
+      <span class="demo-tag">🔄 Comparazione store</span>
+      <span class="demo-tag">🎫 Gestione coupon</span>
+      <span class="demo-tag">📱 Design responsivo</span>
+    </div>
+  </div>
+</div>
+
 <div class="section-head">
 <div class="section-title">Offerta in evidenza</div>
 </div>
@@ -101,6 +121,7 @@ const fmtEur = n => new Intl.NumberFormat('it-IT',{style:'currency',currency:'EU
 /* ========= Categorie ========= */
 const CAT_LABELS = {
   all: "Tutte",
+  elettronica: "Elettronica & Tech", 
   casa_cucina: "Casa e Cucina",
   animali: "Prodotti per Animali",
   bellezza: "Bellezza & Cura Persona",
@@ -112,6 +133,16 @@ const catLabel = k => CAT_LABELS[k] || k;
 /* ========= Demo data ========= */
 const AMAZON_TAG="YOUR_TAG-21";
 const DEALS=[
+  // 🔥 FLASH DEALS - Limited Time  
+  { id:"flash1", title:"🔥 FLASH: iPhone 15 128GB", desc:"Sconto lampo! Solo per oggi. Ultimi pezzi disponibili in tutti i colori.", rating:4.8, reviews:12450, cat:"elettronica", store:"Amazon", merchant:"amazon", priceNow:699, priceWas:979, discount:29, coupon:"FLASH20", image:"https://images.unsplash.com/photo-1592750475338-74b7b21085ab?q=80&w=1200&auto=format&fit=crop", history:[979,949,899,799,699], addedAt:"2025-01-15", links:{ amazon:"https://www.amazon.it/dp/B0FLASHIPHONE" }, gallery:['https://images.unsplash.com/photo-1592750475338-74b7b21085ab?q=80&w=1200&auto=format&fit=crop','https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?q=80&w=1200&auto=format&fit=crop'], pros:['Fotocamera eccezionale','USB-C finalmente','Prestazioni top','Autonomia migliorata'], cons:['Prezzo ancora alto','Ricarica lenta inclusa','Niente adattatore'], specs:[['Storage','128 GB'],['Display','6.1" OLED'],['Camera','48 MP'],['Colori','5 disponibili']], longDesc:`Il prezzo più basso di sempre per iPhone 15! Perfetto upgrade da iPhone 12/13. La fotocamera fa la differenza, USB-C è una comodità. Solo oggi a questo prezzo.` },
+  
+  { id:"flash2", title:"🔥 FLASH: PlayStation 5 + 2 Giochi", desc:"Console + Spider-Man 2 + God of War. Bundle esclusivo, solo 50 pezzi!", rating:4.9, reviews:8920, cat:"elettronica", store:"GameStop", merchant:"awin", priceNow:449, priceWas:649, discount:31, coupon:null, image:"https://images.unsplash.com/photo-1606144042614-b2417e99c4e3?q=80&w=1200&auto=format&fit=crop", history:[649,599,549,499,449], addedAt:"2025-01-15", links:{ awin:"https://www.awin1.com/cread.php?awinmid=333&awinaffid=444" }, gallery:['https://images.unsplash.com/photo-1606144042614-b2417e99c4e3?q=80&w=1200&auto=format&fit=crop'], pros:['Bundle con 2 giochi top','Disponibilità garantita','Spedizione rapida'], cons:['Pochi pezzi disponibili','Bundle fisso, non personalizzabile'], specs:[['Include','Console + 2 giochi'],['Memoria','825 GB SSD'],['Garanzia','2 anni'],['Disponibilità','50 pezzi']], longDesc:`Offerta irripetibile! PS5 finalmente disponibile con 2 dei giochi più richiesti. A questo prezzo vola via.` },
+
+  { id:"trending1", title:"💎 AirPods Pro 2 con USB-C", desc:"Cancellazione attiva del rumore, audio spaziale personalizzato. Custodia MagSafe.", rating:4.7, reviews:5890, cat:"elettronica", store:"Amazon", merchant:"amazon", priceNow:199, priceWas:279, discount:29, coupon:"AUDIO15", image:"https://images.unsplash.com/photo-1572569511254-d8f925fe2cbb?q=80&w=1200&auto=format&fit=crop", history:[279,259,239,219,199], addedAt:"2025-01-14", links:{ amazon:"https://www.amazon.it/dp/B0AIRPODS2" }, gallery:['https://images.unsplash.com/photo-1572569511254-d8f925fe2cbb?q=80&w=1200&auto=format&fit=crop'], pros:['Cancellazione rumore eccellente','Autonomia migliorata','USB-C pratico'], cons:['Prezzo elevato','Solo per iPhone ottimale'], specs:[['Autonomia','6h + 24h custodia'],['Connessione','USB-C'],['Resistenza','IPX4'],['Chip','H2']], longDesc:`Gli AirPods Pro 2 sono un upgrade sensato dai precedenti. La cancellazione del rumore è top di gamma, l'audio spaziale fa la differenza nei film.` },
+
+  { id:"trending2", title:"💎 Dyson V15 Detect Absolute", desc:"Aspirapolvere senza filo con laser per polvere invisibile. Autonomia 60 min.", rating:4.6, reviews:3240, cat:"casa_cucina", store:"Unieuro", merchant:"awin", priceNow:449, priceWas:649, discount:31, coupon:null, image:"https://images.unsplash.com/photo-1558618666-fcd25c85cd64?q=80&w=1200&auto=format&fit=crop", history:[649,599,549,499,449], addedAt:"2025-01-13", links:{ awin:"https://www.awin1.com/cread.php?awinmid=555&awinaffid=666" }, gallery:['https://images.unsplash.com/photo-1558618666-fcd25c85cd64?q=80&w=1200&auto=format&fit=crop'], pros:['Laser per vedere la polvere','Potenza eccellente','Design ergonomico','Accessori completi'], cons:['Prezzo elevato','Rumoroso al massimo','Autonomia variabile'], specs:[['Autonomia','60 min'],['Potenza','230 W'],['Capacità','0.77 L'],['Accessori','7 inclusi']], longDesc:`Il V15 Detect è un investimento: costoso ma efficace. Il laser verde rivela polvere che non vedresti mai, la potenza è costante. Per case grandi è perfetto.` },
+
+  // Enhanced existing deals
   { id:"d1", title:"Friggitrice ad Aria 5.5L", desc:"Cestello antiaderente, 8 programmi, facile da pulire. Ideale per porzioni familiari con minore olio.", rating:4.6, reviews:3560, cat:"casa_cucina", store:"Amazon", merchant:"amazon", priceNow:89, priceWas:139, discount:36, coupon:"AIR10", image:"https://images.unsplash.com/photo-1606756790138-261c7d3113b9?q=80&w=1200&auto=format&fit=crop", history:[139,129,119,99,89], addedAt:"2025-08-05", links:{ amazon:"https://www.amazon.it/dp/B08XYZXYZ" , gallery:['https://images.unsplash.com/photo-1606756790138-261c7d3113b9?q=80&w=1200&auto=format&fit=crop','https://images.unsplash.com/photo-1546069901-ba9599a7e63c?q=80&w=1200&auto=format&fit=crop','https://images.unsplash.com/photo-1543352634-8730a9b43ae4?q=80&w=1200&auto=format&fit=crop'], pros:['Cuoce in modo uniforme','Cestello grande per famiglia','Facile da pulire','Programmi essenziali, non troppi'], cons:['Ingombro sul piano cucina','Nessuna app/ricette integrate','Rumore ventola udibile a piena potenza'], specs:[['Capienza','5.5 L'],['Potenza','1700 W'],['Lavastoviglie','Cestello sì'],['Programmi','8'],['Garanzia','2 anni']], longDesc:`Abbiamo cucinato patate, pollo e verdure per più giorni: la resa è stata costante, con doratura uniforme senza odori forti. Non è un modello “smart”: per molti è un pro (meno complessità), per chi vuole app/appunti è un contro. Dopo 2 settimane di uso, il rivestimento è ancora perfetto. Consigliata a chi vuole qualità senza spendere troppo.`} },
   { id:"d2", title:"Cibo Secco Premium per Cani 12kg", desc:"Ricco di proteine con ingredienti dichiarati, senza coloranti. Sacco richiudibile anti-odore.", rating:4.7, reviews:1420, cat:"animali", store:"Zooplus", merchant:"awin", priceNow:39, priceWas:59, discount:34, coupon:"DOG5", image:"https://images.unsplash.com/photo-1548199973-03cce0bbc87b?q=80&w=1200&auto=format&fit=crop", history:[59,55,49,45,39], addedAt:"2025-08-06", links:{ awin:"https://www.awin1.com/cread.php?awinmid=222&awinaffid=333" , gallery:['https://images.unsplash.com/photo-1548199973-03cce0bbc87b?q=80&w=1200&auto=format&fit=crop','https://images.unsplash.com/photo-1612539927811-2b18a6c41f5e?q=80&w=1200&auto=format&fit=crop'], pros:['Buona tollerabilità','Rapporto qualità/prezzo','Sacco richiudibile comodo'], cons:['Crocche non adatte a cani molto piccoli','Nessuna variante grain-free','Odore intenso all’apertura'], specs:[['Formato','12 kg'],['Proteine','24%'],['Conservazione','Sacco richiudibile'],['Origine','UE']], longDesc:`Provato su due cani (taglia media): feci regolari e pelo lucido dopo 10 giorni. Non è super premium, ma in promo è un ottimo compromesso. Se il tuo cane è sensibile ai cereali, valuta alternative grain-free.`} },
   { id:"d3", title:"Siero Viso Acido Ialuronico 60ml", desc:"Texture leggera, ad assorbimento rapido. Ingredienti essenziali, adatto a tutti i tipi di pelle.", rating:4.4, reviews:2300, cat:"bellezza", store:"Amazon", merchant:"amazon", priceNow:12, priceWas:19, discount:37, coupon:null, image:"https://images.unsplash.com/photo-1512496015851-a90fb38ba796?q=80&w=1200&auto=format&fit=crop", history:[19,17,15,13,12], addedAt:"2025-08-08", links:{ amazon:"https://www.amazon.it/dp/B0AAABBBB" , gallery:['https://images.unsplash.com/photo-1512496015851-a90fb38ba796?q=80&w=1200&auto=format&fit=crop','https://images.unsplash.com/photo-1545239351-1141bd82e8a6?q=80&w=1200&auto=format&fit=crop'], pros:['Texture leggera','INCI essenziale','Ottimo sotto il make-up'], cons:['Flacone senza contagocce di qualità','Profumo leggero non per tutti'], specs:[['Contenuto','60 ml'],['Attivo','Acido Ialuronico'],['Profumo','Leggero'],['Pelli','Tutte']], longDesc:`Usato mattina e sera per due settimane: pelle più elastica, senza pilling con la crema solare. Non aspettarti miracoli anti-età: è idratazione onesta a prezzo corretto.`} },
@@ -172,6 +203,8 @@ function spark(history){
   return `<svg width="${w}" height="${h}" role="img" aria-label="Andamento prezzo"><path d="${d}" fill="none" stroke="${col}" stroke-width="2"/></svg>`;
 }
 function badge(o){
+  if(o.id && o.id.startsWith('flash')) return `<div class="badge flash">⚡ FLASH DEAL</div>`;
+  if(o.id && o.id.startsWith('trending')) return `<div class="badge trending">💎 TRENDING</div>`;
   if(o.discount>=60) return `<div class="badge errore">⚡ Probabile errore di prezzo</div>`;
   if(o.discount>=45) return `<div class="badge bomba">🔥 Offerta bomba</div>`;
   if(o.priceWas && o.priceNow && o.priceNow<o.priceWas) return `<div class="badge">Risparmia ${fmtEur(o.priceWas - o.priceNow)}</div>`;

@@ -1,6 +1,21 @@
 <!doctype html><html lang="it"><head>
-<meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
-<meta name="theme-color" content="#0b0e13"/><title>Blog · OfferteShock</title>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+<meta name="theme-color" content="#0b0e13"/>
+<title>Blog · Domotica low‑cost · Offerteshock.it</title>
+<meta name="description" content="Guide e articoli sulla domotica low‑cost: Shelly, Sonoff, Zigbee, prese smart, sensori. Consigli pratici, configurazioni e offerte verificate."/>
+<link rel="canonical" href="https://berny1975.github.io/offerteshock-demo/blog.html"/>
+<meta name="robots" content="index,follow"/>
+<meta property="og:type" content="website"/>
+<meta property="og:title" content="Blog domotica low‑cost · Offerteshock.it"/>
+<meta property="og:description" content="Tutorial e guide pratiche per una smart home economica ma affidabile: Shelly, Sonoff, Zigbee, Alexa e Google Home."/>
+<meta property="og:url" content="https://berny1975.github.io/offerteshock-demo/blog.html"/>
+<meta property="og:image" content="https://images.unsplash.com/photo-1558002038-1055907df827?q=80&w=1200&auto=format&fit=crop"/>
+<meta name="twitter:card" content="summary_large_image"/>
+<link rel="preconnect" href="https://images.unsplash.com" crossorigin>
+<link rel="preconnect" href="https://www.amazon.it" crossorigin>
+<link rel="preconnect" href="https://www.awin1.com" crossorigin>
+<link rel="preconnect" href="https://clk.tradedoubler.com" crossorigin>
 <link rel="stylesheet" href="./assets/styles.css"/></head><body>
 <header class="fullbleed">
 <div class="h-inner" id="hInner">
@@ -19,12 +34,13 @@
 <div class="ctrl cat">
 <span class="label" id="labCat">Categorie:</span>
 <span class="select small"><select aria-labelledby="labCat" id="catSelect">
-<option value="all">Tutte</option>
-<option value="casa_cucina">Casa e Cucina</option>
-<option value="animali">Prodotti per Animali</option>
-<option value="bellezza">Bellezza &amp; Cura Persona</option>
-<option value="fai_da_te">Fai da Te e Giardinaggio</option>
-<option value="infanzia">Prodotti per l'Infanzia</option>
+<option value="all">Tutto</option>
+<option value="prese_smart">Prese smart</option>
+<option value="rele_shelly">Relè Shelly</option>
+<option value="interruttori_sonoff">Interruttori Sonoff</option>
+<option value="hub_zigbee">Hub Zigbee</option>
+<option value="sensori">Sensori</option>
+<option value="lampadine">Lampadine</option>
 </select></span>
 </div>
 <div class="searchbar">
@@ -51,25 +67,22 @@
 </nav>
 </div>
 
-
-
-
 <main class="container">
-
-
-
-
-
-<!-- Burger Popover + scrim -->
-
-
-
-<main class="container">
-<div class='section-head'><div class='section-title'>Blog</div></div><section class='grid' id='blog'></section>
+<div class='section-head'><div class='section-title'>Blog</div></div>
+<section class='grid' id='blog'>
+  <article class="card">
+    <img alt="Domotica low-cost" src="https://images.unsplash.com/photo-1558002038-1055907df827?q=80&w=1200&auto=format&fit=crop"/>
+    <div class="content">
+      <div class="title">Domotica low‑cost: guida definitiva (Shelly, Sonoff, Zigbee)</div>
+      <p class="desc">La guida completa per costruire una smart home economica ma affidabile: protocolli, hub, scenari pratici, consumi e sicurezza. Con schede prodotto e consigli d'acquisto.</p>
+      <div class="cta"><a class="btn primary" href="post.html">Leggi l’articolo</a></div>
+    </div>
+  </article>
+</section>
 
 
 <div class="footer" style="opacity:.8;margin:28px 0">
-<p>Demo offline con il tuo tema. Sostituisci i link con i tuoi deeplink affiliati. In qualità di Affiliato Amazon, potrei ricevere un compenso dagli acquisti idonei.</p>
+<p>In qualità di Affiliato Amazon/AWIN/Tradedoubler potremmo ricevere una piccola commissione dagli acquisti idonei. Il prezzo per te non cambia.</p>
 <p><a href="privacy.html">Privacy</a> · <a href="cookie.html">Cookie</a> · <a href="termini.html">Termini</a></p>
 </div>
 </main>
@@ -84,12 +97,13 @@ const fmtEur = n => new Intl.NumberFormat('it-IT',{style:'currency',currency:'EU
 
 /* ========= Categorie ========= */
 const CAT_LABELS = {
-  all: "Tutte",
-  casa_cucina: "Casa e Cucina",
-  animali: "Prodotti per Animali",
-  bellezza: "Bellezza & Cura Persona",
-  fai_da_te: "Fai da Te e Giardinaggio",
-  infanzia: "Prodotti per l'Infanzia"
+  all: "Tutto",
+  prese_smart: "Prese smart",
+  rele_shelly: "Relè Shelly",
+  interruttori_sonoff: "Interruttori Sonoff",
+  hub_zigbee: "Hub Zigbee",
+  sensori: "Sensori",
+  lampadine: "Lampadine"
 };
 const catLabel = k => CAT_LABELS[k] || k;
 
@@ -157,6 +171,7 @@ function spark(history){
 }
 function badge(o){
   if(o.discount>=60) return `<div class="badge errore">⚡ Probabile errore di prezzo</div>`;
+// cleaned stray HTML
   if(o.discount>=45) return `<div class="badge bomba">🔥 Offerta bomba</div>`;
   if(o.priceWas && o.priceNow && o.priceNow<o.priceWas) return `<div class="badge">Risparmia ${fmtEur(o.priceWas - o.priceNow)}</div>`;
   return '';
@@ -646,135 +661,39 @@ document.addEventListener('click', (e)=>{
   }, true);
 })();
 </script>
-
-
-
-
-
-<script id="os-subpage-rename-only">
+<script id="scroll-restore">
 (function(){
-  if (window.__OS_SUBPAGE_RENAME_ONLY__) return; window.__OS_SUBPAGE_RENAME_ONLY__ = true;
-  // On subpage mount: find original "Torna alla Home" control and just rename its text to "Chiudi Dettagli".
-  const obs = new MutationObserver(function(muts){
-    muts.forEach(function(m){
-      (m.addedNodes||[]).forEach(function(node){
-        if (!node || node.nodeType!==1 || !node.classList) return;
-        if (!(node.classList.contains('os-subpage') || node.matches('[class*="subpage"]'))) return;
-        try{
-          // Prefer data-os-back
-          let backBtn = node.querySelector('[data-os-back]');
-          if (!backBtn){
-            const cands = node.querySelectorAll('a,button');
-            for (const el of cands){
-              const t = (el.textContent||'').trim();
-              if (/torna alla home/i.test(t)){ backBtn = el; break; }
-            }
-          }
-          if (backBtn){
-            // Only change the label; DO NOT modify handlers
-            backBtn.textContent = 'Chiudi Dettagli';
-          }
-          // Remove any extra close buttons we may have added earlier
-          node.querySelectorAll('.detail-actions-right, .btn-close-detail, [data-os-close].close').forEach(function(el){
-            if (el !== backBtn) el.remove();
-          });
-        }catch(_){}
-      });
-    });
-  });
-  obs.observe(document.documentElement, {childList:true, subtree:true});
-})();
-</script>
-
-
-
-
-<script id="os-subpage-dup-close-targeted-centered-v2">
-(function(){
-  if (window.__OS_SUBPAGE_DUP_CLOSE_TARGETED_CENTERED_V2__) return; window.__OS_SUBPAGE_DUP_CLOSE_TARGETED_CENTERED_V2__ = true;
-
-  function findHeaderRowWithTitle(root){
-    const all = root.querySelectorAll('*');
-    for (const el of all){
-      try{
-        const t = (el.textContent||'').trim();
-        if (/^Scheda dettaglio:/i.test(t)){
-          return el.closest('.row') || el.closest('.os-subheader') || root.querySelector('.os-subheader') || el.parentElement || root;
-        }
-      }catch(_){}
+  try{
+    // Keep browser back/forward native restoration
+    if ('scrollRestoration' in history) history.scrollRestoration = 'auto';
+    function isBackForward(evt){
+      if (evt && evt.persisted) return true;
+      var nav = (performance.getEntriesByType && performance.getEntriesByType('navigation')) || [];
+      return !!(nav[0] && nav[0].type === 'back_forward');
     }
-    return root.querySelector('.os-subheader .row') || root.querySelector('.os-subheader') || root;
-  }
-
-  const obs = new MutationObserver(function(muts){
-    muts.forEach(function(m){
-      (m.addedNodes||[]).forEach(function(node){
-        if (!node || node.nodeType!==1 || !node.classList) return;
-        if (!(node.classList.contains('os-subpage') || node.matches('[class*="subpage"]'))) return;
-        try{
-          const sub = node;
-
-          // Locate original back control
-          let backBtn = sub.querySelector('[data-os-back]');
-          if (!backBtn){
-            const cands = sub.querySelectorAll('a,button');
-            for (const el of cands){
-              const t = (el.textContent||'').trim();
-              if (/torna alla home/i.test(t) || /chiudi dettagli/i.test(t)){ backBtn = el; break; }
-            }
-          }
-          if (!backBtn) return;
-
-          // Standardize left button
-          backBtn.textContent = 'Chiudi Dettagli';
-          backBtn.classList.add('btn-close-detail', 'btn-close-detail-left');
-          backBtn.style.position = 'static';
-          backBtn.style.float = 'none';
-
-          // Get the header row that contains the "Scheda dettaglio:" title
-          const row = findHeaderRowWithTitle(sub);
-
-          // Force a 3-column grid row: [left btn] [center title] [right btn]
-          row.setAttribute('data-os-grid', 'row3');
-          row.style.display = 'grid';
-          row.style.gridTemplateColumns = 'auto 1fr auto';
-          row.style.alignItems = 'center';
-          row.style.columnGap = '12px'; row.style.paddingTop='0'; row.style.paddingBottom='0'; row.style.height='44px';
-
-          // Center title/brand
-          const brand = row.querySelector('.brand') || row;
-          brand.style.gridColumn = '2';
-          brand.style.textAlign = 'center';
-          brand.style.minWidth = '0';
-          brand.style.overflow = 'hidden';
-          brand.style.textOverflow = 'ellipsis';
-          brand.style.whiteSpace = 'nowrap';
-
-          // Ensure left button is placed in column 1
-          try{ row.insertBefore(backBtn, row.firstChild); }catch(_){}
-          backBtn.style.gridColumn = '1';
-          backBtn.style.justifySelf = 'start';
-
-          // Remove previous mirrors to avoid duplicates
-          row.querySelectorAll('.btn-close-detail-mirror').forEach(el=>el.remove());
-
-          // Create right mirror in column 3
-          const mirror = backBtn.cloneNode(true);
-          mirror.classList.add('btn-close-detail-mirror', 'btn-close-detail-right');
-          mirror.removeAttribute('href');
-          mirror.style.gridColumn = '3';
-          mirror.style.justifySelf = 'end';
-          mirror.addEventListener('click', function(ev){
-            ev.preventDefault(); ev.stopImmediatePropagation();
-            try{ backBtn.click(); }catch(_){}
-          }, true);
-
-          row.appendChild(mirror);
-        }catch(_){}
-      });
+    function toTopInstant(){
+      var de = document.documentElement;
+      var prev = de.style.scrollBehavior;
+      de.style.scrollBehavior = 'auto';
+      window.scrollTo(0,0);
+      requestAnimationFrame(function(){ de.style.scrollBehavior = prev || ''; });
+    }
+    window.addEventListener('pageshow', function(e){
+      if (isBackForward(e)) return;         // back/forward: let browser restore
+      if (location.hash) return;            // anchor navigation: keep anchor
+      toTopInstant();
     });
-  });
-  obs.observe(document.documentElement, {childList:true, subtree:true});
+    // Fallback for older browsers
+    if (document.readyState === 'complete' || document.readyState === 'interactive'){
+      var nav = (performance.getEntriesByType && performance.getEntriesByType('navigation')) || [];
+      if (!(nav[0] && nav[0].type === 'back_forward') && !location.hash){ toTopInstant(); }
+    } else {
+      document.addEventListener('DOMContentLoaded', function(){
+        var nav = (performance.getEntriesByType && performance.getEntriesByType('navigation')) || [];
+        if (!(nav[0] && nav[0].type === 'back_forward') && !location.hash){ toTopInstant(); }
+      });
+    }
+  }catch(_){}
 })();
 </script>
 </body></html>
